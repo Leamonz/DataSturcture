@@ -14,26 +14,26 @@ const int DEFAULT_N = 20;
 template<class ElemType>
 class SqList {
 protected:
-    int count;//é¡ºåºè¡¨ä¸­çš„å…ƒç´ ä¸ªæ•°
-    int maxSize;//é¡ºåºè¡¨æœ€å¤§å…ƒç´ ä¸ªæ•°
+    int count;//Ë³Ğò±íÖĞµÄÔªËØ¸öÊı
+    int maxSize;//Ë³Ğò±í×î´óÔªËØ¸öÊı
     ElemType *sqList;
 
-    //è¾…åŠ©å‡½æ•°
-    bool Full() const;//åˆ¤æ–­çº¿æ€§è¡¨æ˜¯å¦å·²æ»¡
+    //¸¨Öúº¯Êı
+    bool Full() const;//ÅĞ¶ÏÏßĞÔ±íÊÇ·ñÒÑÂú
 public:
-    explicit SqList(int size = DEFAULT_N);//æ„é€ å‡½æ•°   explicitå…³é”®å­— --- é¿å…éšå¼ç±»å‹è½¬æ¢
-    SqList(const SqList<ElemType> &copy);//æ‹·è´æ„é€ å‡½æ•°
-    virtual ~SqList();//ææ„å‡½æ•°
-    int Length() const;//è¿”å›é¡ºåºè¡¨é•¿åº¦
-    bool Empty() const;//åˆ¤æ–­é¡ºåºè¡¨æ˜¯å¦ä¸ºç©º
-    void Clear();//æ¸…ç©ºé¡ºåºè¡¨
+    explicit SqList(int size = DEFAULT_N);//¹¹Ôìº¯Êı   explicit¹Ø¼ü×Ö --- ±ÜÃâÒşÊ½ÀàĞÍ×ª»»
+    SqList(const SqList<ElemType> &copy);//¿½±´¹¹Ôìº¯Êı
+    virtual ~SqList();//Îö¹¹º¯Êı
+    int Length() const;//·µ»ØË³Ğò±í³¤¶È
+    bool Empty() const;//ÅĞ¶ÏË³Ğò±íÊÇ·ñÎª¿Õ
+    void Clear();//Çå¿ÕË³Ğò±í
     void Traverse(void(*Visit)(ElemType &));
 
-    ElemType GetElem(int pos) const;//è¿”å›æŒ‡å®šä½ç½®çš„å…ƒç´ 
-    void SetElem(int pos, const ElemType &key);//è®¾ç½®æŒ‡å®šä½ç½®çš„å…ƒç´ 
-    void Delete(int pos);//åˆ é™¤æŒ‡å®šä½ç½®çš„å…ƒç´ 
-    void Insert(int pos, const ElemType &key);//åœ¨æŒ‡å®šä½ç½®æ’å…¥æŒ‡å®šçš„å€¼
-    SqList<ElemType> &operator=(const SqList<ElemType> &copy);//é‡è½½èµ‹å€¼è¿ç®—ç¬¦
+    ElemType GetElem(int pos) const;//·µ»ØÖ¸¶¨Î»ÖÃµÄÔªËØ
+    void SetElem(int pos, const ElemType &key);//ÉèÖÃÖ¸¶¨Î»ÖÃµÄÔªËØ
+    void Delete(int pos);//É¾³ıÖ¸¶¨Î»ÖÃµÄÔªËØ
+    void Insert(int pos, const ElemType &key);//ÔÚÖ¸¶¨Î»ÖÃ²åÈëÖ¸¶¨µÄÖµ
+    SqList<ElemType> &operator=(const SqList<ElemType> &copy);//ÖØÔØ¸³ÖµÔËËã·û
 };
 
 template<class ElemType>
@@ -74,7 +74,7 @@ void SqList<ElemType>::Traverse(void (*Visit)(ElemType &)) {
 template<class ElemType>
 ElemType SqList<ElemType>::GetElem(int pos) const {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯\n";
+        cout << "Î»ÖÃ´íÎó\n";
         return 0;
     } else {
         return sqList[pos - 1];
@@ -84,7 +84,7 @@ ElemType SqList<ElemType>::GetElem(int pos) const {
 template<class ElemType>
 void SqList<ElemType>::SetElem(int pos, const ElemType &key) {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯\n";
+        cout << "Î»ÖÃ´íÎó\n";
         return;
     } else {
         sqList[pos - 1] = key;
@@ -94,10 +94,10 @@ void SqList<ElemType>::SetElem(int pos, const ElemType &key) {
 template<class ElemType>
 void SqList<ElemType>::Delete(int pos) {
     if (Empty()) {
-        cout << "é¡ºåºè¡¨å·²ç»ä¸ºç©º\n";
+        cout << "Ë³Ğò±íÒÑ¾­Îª¿Õ\n";
         return;
     } else if (pos < 1 || pos > count) {
-        cout << "ä½ç½®é”™è¯¯\n";
+        cout << "Î»ÖÃ´íÎó\n";
         return;
     } else {
         for (int i = pos - 1; i < count - 1; i++) {
@@ -110,10 +110,10 @@ void SqList<ElemType>::Delete(int pos) {
 template<class ElemType>
 void SqList<ElemType>::Insert(int pos, const ElemType &key) {
     if (Full()) {
-        cout << "é¡ºåºè¡¨å·²æ»¡\n";
+        cout << "Ë³Ğò±íÒÑÂú\n";
         return;
     } else if (pos < 1 || pos > Length() + 1) {
-        cout << "ä½ç½®é”™è¯¯\n";
+        cout << "Î»ÖÃ´íÎó\n";
         return;
     } else {
         for (int i = count; i > pos; i--) {
@@ -157,41 +157,41 @@ SqList<ElemType>::~SqList() {
 }
 
 
-//å•å‘é“¾è¡¨
+//µ¥ÏòÁ´±í
 template<class ElemType>
 class SimpleLinkList {
 protected:
     Node<ElemType> *head;
 
-    //è¾…åŠ©å‡½æ•°
-    Node<ElemType> *GetElemPtr(int pos) const;//è¿”å›ç¬¬posä¸ªç»“ç‚¹çš„æŒ‡é’ˆ
+    //¸¨Öúº¯Êı
+    Node<ElemType> *GetElemPtr(int pos) const;//·µ»ØµÚpos¸ö½áµãµÄÖ¸Õë
 
 public:
     SimpleLinkList();
 
     virtual ~SimpleLinkList();
 
-    int Length() const;//è¿”å›é“¾è¡¨é•¿åº¦
+    int Length() const;//·µ»ØÁ´±í³¤¶È
 
-    bool Empty() const;//åˆ¤ç©º
+    bool Empty() const;//ÅĞ¿Õ
 
-    void Clear();//æ¸…ç©ºé“¾è¡¨
+    void Clear();//Çå¿ÕÁ´±í
 
-    void Traverse(void(*Visit)(ElemType &));//éå†é“¾è¡¨å…ƒç´ å¹¶æ‰§è¡ŒVisitå‡½æ•°
+    void Traverse(void(*Visit)(ElemType &));//±éÀúÁ´±íÔªËØ²¢Ö´ĞĞVisitº¯Êı
 
-    ElemType GetElem(int pos) const;//è·å–posä¸Šçš„å…ƒç´ 
+    ElemType GetElem(int pos) const;//»ñÈ¡posÉÏµÄÔªËØ
 
-    void SetElem(int pos, ElemType key);//æ”¹å˜posä¸Šçš„å…ƒç´ 
+    void SetElem(int pos, ElemType key);//¸Ä±äposÉÏµÄÔªËØ
 
-    void Delete(int pos);//åˆ é™¤posä¸Šçš„å…ƒç´ 
+    void Delete(int pos);//É¾³ıposÉÏµÄÔªËØ
 
-    void Insert(int pos, ElemType key);//åœ¨posæ’å…¥ä¸€ä¸ªå…ƒç´ 
+    void Insert(int pos, ElemType key);//ÔÚpos²åÈëÒ»¸öÔªËØ
 
-    void reverse();//ç¿»è½¬é“¾è¡¨
+    void reverse();//·­×ªÁ´±í
 
-    SimpleLinkList(const SimpleLinkList<ElemType> &copy);//æ‹·è´æ„é€ å‡½æ•°
+    SimpleLinkList(const SimpleLinkList<ElemType> &copy);//¿½±´¹¹Ôìº¯Êı
 
-    SimpleLinkList<ElemType> &operator=(const SimpleLinkList<ElemType> &copy);//é‡è½½èµ‹å€¼è¿ç®—ç¬¦
+    SimpleLinkList<ElemType> &operator=(const SimpleLinkList<ElemType> &copy);//ÖØÔØ¸³ÖµÔËËã·û
 };
 
 template<class ElemType>
@@ -203,10 +203,10 @@ Node<ElemType> *SimpleLinkList<ElemType>::GetElemPtr(int pos) const {
         curPos++;
     }
     if (node != NULL && curPos == pos) {
-        //æŸ¥æ‰¾æˆåŠŸ
+        //²éÕÒ³É¹¦
         return node;
     } else {
-        //æŸ¥æ‰¾å¤±è´¥
+        //²éÕÒÊ§°Ü
         return NULL;
     }
 }
@@ -235,7 +235,7 @@ bool SimpleLinkList<ElemType>::Empty() const {
 template<class ElemType>
 void SimpleLinkList<ElemType>::Clear() {
     while (Length() > 0) {
-        Delete(1);//ä¸åœåˆ é™¤ç¬¬ä¸€ä¸ªç»“ç‚¹ï¼Œç›´åˆ°é“¾è¡¨ä¸ºç©º
+        Delete(1);//²»Í£É¾³ıµÚÒ»¸ö½áµã£¬Ö±µ½Á´±íÎª¿Õ
     }
 }
 
@@ -250,7 +250,7 @@ void SimpleLinkList<ElemType>::Traverse(void(*Visit)(ElemType &)) {
 template<class ElemType>
 ElemType SimpleLinkList<ElemType>::GetElem(int pos) const {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return 0;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos);
@@ -261,7 +261,7 @@ ElemType SimpleLinkList<ElemType>::GetElem(int pos) const {
 template<class ElemType>
 void SimpleLinkList<ElemType>::SetElem(int pos, ElemType key) {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos);
@@ -273,7 +273,7 @@ void SimpleLinkList<ElemType>::SetElem(int pos, ElemType key) {
 template<class ElemType>
 void SimpleLinkList<ElemType>::Insert(int pos, ElemType key) {
     if (pos < 1 || pos > Length() + 1) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return;
     } else {
         Node<ElemType> *newNode;
@@ -287,7 +287,7 @@ void SimpleLinkList<ElemType>::Insert(int pos, ElemType key) {
 template<class ElemType>
 void SimpleLinkList<ElemType>::Delete(int pos) {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos - 1);
@@ -348,23 +348,23 @@ SimpleLinkList<ElemType> &SimpleLinkList<ElemType>::operator=(const SimpleLinkLi
 }
 
 
-//å¾ªç¯é“¾è¡¨
+//Ñ­»·Á´±í
 template<class ElemType>
 class CircleLinkList {
 protected:
     Node<ElemType> *head;
 
-    //è¾…åŠ©å‡½æ•°
-    Node<ElemType> *GetElemPtr(int pos) const;//è¿”å›ç¬¬posä¸ªç»“ç‚¹çš„æŒ‡é’ˆ
+    //¸¨Öúº¯Êı
+    Node<ElemType> *GetElemPtr(int pos) const;//·µ»ØµÚpos¸ö½áµãµÄÖ¸Õë
 
 public:
     CircleLinkList();
 
     virtual ~CircleLinkList();
 
-    int Length() const;//è¿”å›é“¾è¡¨é•¿åº¦
+    int Length() const;//·µ»ØÁ´±í³¤¶È
 
-    bool Empty() const;//åˆ¤ç©º
+    bool Empty() const;//ÅĞ¿Õ
 
     void Clear();// clear all elements in the list
 
@@ -378,9 +378,9 @@ public:
 
     void Insert(int pos, ElemType key);//insert an element with value key before pos
 
-    CircleLinkList(const CircleLinkList<ElemType> &copy);//æ‹·è´æ„é€ å‡½æ•°
+    CircleLinkList(const CircleLinkList<ElemType> &copy);//¿½±´¹¹Ôìº¯Êı
 
-    CircleLinkList<ElemType> &operator=(const CircleLinkList<ElemType> &copy);//é‡è½½èµ‹å€¼è¿ç®—ç¬¦
+    CircleLinkList<ElemType> &operator=(const CircleLinkList<ElemType> &copy);//ÖØÔØ¸³ÖµÔËËã·û
 };
 
 template<class ElemType>
@@ -397,10 +397,10 @@ Node<ElemType> *CircleLinkList<ElemType>::GetElemPtr(int pos) const {
         curPos++;
     }
     if (tmpPtr != head && curPos == pos) {
-        //æŸ¥æ‰¾æˆåŠŸ
+        //²éÕÒ³É¹¦
         return tmpPtr;
     } else {
-        //æŸ¥æ‰¾å¤±è´¥
+        //²éÕÒÊ§°Ü
         return NULL;
     }
 }
@@ -436,7 +436,7 @@ bool CircleLinkList<ElemType>::Empty() const {
 template<class ElemType>
 void CircleLinkList<ElemType>::Clear() {
     while (Length() > 0) {
-        Delete(1);//ä¸åœåˆ é™¤ç¬¬ä¸€ä¸ªç»“ç‚¹ï¼Œç›´åˆ°é“¾è¡¨ä¸ºç©º
+        Delete(1);//²»Í£É¾³ıµÚÒ»¸ö½áµã£¬Ö±µ½Á´±íÎª¿Õ
     }
 }
 
@@ -451,7 +451,7 @@ void CircleLinkList<ElemType>::Traverse(void(*Visit)(ElemType &)) {
 template<class ElemType>
 ElemType CircleLinkList<ElemType>::GetElem(int pos) const {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return 0;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos);
@@ -462,7 +462,7 @@ ElemType CircleLinkList<ElemType>::GetElem(int pos) const {
 template<class ElemType>
 void CircleLinkList<ElemType>::SetElem(int pos, ElemType key) {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos);
@@ -473,7 +473,7 @@ void CircleLinkList<ElemType>::SetElem(int pos, ElemType key) {
 template<class ElemType>
 void CircleLinkList<ElemType>::Insert(int pos, ElemType key) {
     if (pos < 1 || pos > Length() + 1) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return;
     } else {
         Node<ElemType> *newNode;
@@ -487,7 +487,7 @@ void CircleLinkList<ElemType>::Insert(int pos, ElemType key) {
 template<class ElemType>
 void CircleLinkList<ElemType>::Delete(int pos) {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos - 1);
@@ -528,12 +528,12 @@ CircleLinkList<ElemType> &CircleLinkList<ElemType>::operator=(const CircleLinkLi
 }
 
 
-//åŒå‘å¾ªç¯é“¾è¡¨
+//Ë«ÏòÑ­»·Á´±í
 template<class ElemType>
 class BiLinkList {
 protected:
     DblNode<ElemType> *head;
-    /* æ–°æ·»åŠ çš„æ•°æ®æˆå‘˜è®°å½•å½“å‰ä½ç½®/æŒ‡é’ˆä»¥åŠé“¾è¡¨ä¸­çš„å…ƒç´ ä¸ªæ•° */
+    /* ĞÂÌí¼ÓµÄÊı¾İ³ÉÔ±¼ÇÂ¼µ±Ç°Î»ÖÃ/Ö¸ÕëÒÔ¼°Á´±íÖĞµÄÔªËØ¸öÊı */
     mutable int curPos;
     mutable DblNode<ElemType> *curPtr;
     int count;
@@ -544,7 +544,7 @@ protected:
 public:
     BiLinkList();
 
-    BiLinkList(const BiLinkList<ElemType> &copy);//æ‹·è´æ„é€ å‡½æ•°
+    BiLinkList(const BiLinkList<ElemType> &copy);//¿½±´¹¹Ôìº¯Êı
 
     virtual ~BiLinkList();
 
@@ -554,7 +554,7 @@ public:
 
     void Clear();//clear the linklist
 
-    void Traverse(void(*Visit)(ElemType &)) const;//éå†
+    void Traverse(void(*Visit)(ElemType &)) const;//±éÀú
 
     ElemType GetElem(int pos) const;//get the element on pos
 
@@ -602,7 +602,7 @@ BiLinkList<ElemType>::BiLinkList() {
 template<class ElemType>
 ElemType BiLinkList<ElemType>::GetElem(int pos) const {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         exit(1);
     } else {
         DblNode<ElemType> *tmpPtr;
@@ -614,7 +614,7 @@ ElemType BiLinkList<ElemType>::GetElem(int pos) const {
 template<class ElemType>
 void BiLinkList<ElemType>::SetElem(int pos, ElemType key) {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return;
     } else {
         DblNode<ElemType> *tmpPtr;
@@ -636,7 +636,7 @@ bool BiLinkList<ElemType>::Empty() const {
 template<class ElemType>
 void BiLinkList<ElemType>::Insert(int pos, ElemType key) {
     if (pos < 1 || pos > Length() + 1) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return;
     } else {
         DblNode<ElemType> *newNode, *nextPtr, *prevPtr;
@@ -654,7 +654,7 @@ void BiLinkList<ElemType>::Insert(int pos, ElemType key) {
 template<class ElemType>
 void BiLinkList<ElemType>::Delete(int pos) {
     if (pos < 1 || pos > Length()) {
-        cout << "ä½ç½®é”™è¯¯" << endl;
+        cout << "Î»ÖÃ´íÎó" << endl;
         return;
     } else {
         DblNode<ElemType> *tmpPtr, *prevPtr, *nextPtr;
