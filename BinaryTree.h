@@ -32,9 +32,6 @@ struct BinTreeNode {
 
 template<class ElemType>
 class BinaryTree {
-    friend void DisplayBTWithTreeShape(BinaryTree<ElemType> &bt);
-
-    friend void DisplayBTWithTreeShapeHelp(BinTreeNode<ElemType> *r, int level);
 
 protected:
 // 数据成员:
@@ -241,7 +238,7 @@ BinaryTree<ElemType> &BinaryTree<ElemType>::operator=(const BinaryTree<ElemType>
 
 //树状显示二叉树
 template<class ElemType>
-void DisplayBTWithTreeShapeHelp(BinTreeNode<ElemType> *r, int level) {
+void DisplayBTWithTreeShapeHelp(const BinTreeNode<ElemType> *r, int level) {
     if (r != NULL) {
         //显示右子树
         DisplayBTWithTreeShapeHelp(r->rChild, level + 1);
@@ -257,7 +254,7 @@ void DisplayBTWithTreeShapeHelp(BinTreeNode<ElemType> *r, int level) {
 
 template<class ElemType>
 void DisplayBTWithTreeShape(BinaryTree<ElemType> &bt) {
-    DisplayBTWithTreeShapeHelp(bt.root, 1);
+    DisplayBTWithTreeShapeHelp(bt.GetRoot(), 1);
     cout << endl;
 }
 
