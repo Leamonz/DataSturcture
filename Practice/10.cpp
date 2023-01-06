@@ -4,7 +4,7 @@
 
 #include<iostream>
 #include<cstring>
-#include"MyString.h"
+#include"../MyString.h"
 
 using namespace std;
 

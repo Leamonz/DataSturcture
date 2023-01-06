@@ -38,13 +38,13 @@ HuffmanTreeNode<WeightType>::HuffmanTreeNode(WeightType w, int p, int l, int r) 
 template<class CharType, class WeightType>
 class HuffmanTree {
 protected:
-    HuffmanTreeNode<WeightType> *nodes;//å­˜å‚¨ç»“ç‚¹ä¿¡æ¯ï¼Œnodes[0]æœªç”¨
-    CharType *LeafChars;//å¶ç»“ç‚¹å­—ç¬¦ä¿¡æ¯
-    CharString *LeafCharCodes;//å¶ç»“ç‚¹å­—ç¬¦ç¼–ç ä¿¡æ¯
-    int curPos;//è¯‘ç æ—¶ä»æ ¹èŠ‚ç‚¹åˆ°å¶ç»“ç‚¹è·¯å¾„çš„å½“å‰ç»“ç‚¹
-    int num; //å¶ç»“ç‚¹ä¸ªæ•°
+    HuffmanTreeNode<WeightType> *nodes;//´æ´¢½áµãĞÅÏ¢£¬nodes[0]Î´ÓÃ
+    CharType *LeafChars;//Ò¶½áµã×Ö·ûĞÅÏ¢
+    CharString *LeafCharCodes;//Ò¶½áµã×Ö·û±àÂëĞÅÏ¢
+    int curPos;//ÒëÂëÊ±´Ó¸ù½Úµãµ½Ò¶½áµãÂ·¾¶µÄµ±Ç°½áµã
+    int num; //Ò¶½áµã¸öÊı
 
-    void Select(int cur, int &r1, int &r2);//ä»nodes[1~cur]ä¸­é€‰å‡ºæƒå€¼æœ€å°çš„ä¸¤ä¸ªç»“ç‚¹
+    void Select(int cur, int &r1, int &r2);//´Ónodes[1~cur]ÖĞÑ¡³öÈ¨Öµ×îĞ¡µÄÁ½¸ö½áµã
     void CreateHuffmanTree(CharType ch[], WeightType w[], unsigned int n);
 
 public:
@@ -78,11 +78,11 @@ void HuffmanTree<CharType, WeightType>::Select(int cur, int &r1, int &r2) {
 
 template<class CharType, class WeightType>
 void HuffmanTree<CharType, WeightType>::CreateHuffmanTree(CharType *ch, WeightType *w, unsigned int n) {
-    this->num = n;//å¶ç»“ç‚¹ä¸ªæ•° n
+    this->num = n;//Ò¶½áµã¸öÊı n
     int m = 2 * n - 1;
     LeafChars = new CharType[n + 1];
     LeafCharCodes = new CharString[n + 1];
-    nodes = new HuffmanTreeNode<WeightType>[m + 1];//ç»“ç‚¹ä¸ªæ•°2n-1
+    nodes = new HuffmanTreeNode<WeightType>[m + 1];//½áµã¸öÊı2n-1
     nodes[0].weight = (WeightType) 1e8;
     for (int i = 1; i <= n; i++) {
         LeafChars[i] = ch[i - 1];
@@ -105,9 +105,9 @@ void HuffmanTree<CharType, WeightType>::CreateHuffmanTree(CharType *ch, WeightTy
             if (nodes[parent].lChild == child) charCode.Insert(1, '0');
             else charCode.Insert(1, '1');
         }
-        LeafCharCodes[i] = charCode;
+        LeafCharCodes[i] = CharString(charCode);
     }
-    curPos = m;//æ ¹èŠ‚ç‚¹ä½ç½®
+    curPos = m;//¸ù½ÚµãÎ»ÖÃ
 }
 
 template<class CharType, class WeightType>
@@ -126,7 +126,7 @@ template<class CharType, class WeightType>
 CharString HuffmanTree<CharType, WeightType>::Encode(CharType ch) {
     CharString code;
     unsigned int child = 0, parent = 0;
-    // æ‰¾åˆ°chå¯¹åº”å¶ç»“ç‚¹ä½ç½®
+    // ÕÒµ½ch¶ÔÓ¦Ò¶½áµãÎ»ÖÃ
     for (unsigned int i = 1; i <= num; i++) {
         if (LeafChars[i] == ch) {
             return LeafCharCodes[i];

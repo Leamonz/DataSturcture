@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <ctime>
 
 using namespace std;
 struct BufferType {
@@ -24,8 +25,8 @@ protected:
     ofstream outfp;
     BufferType buf{0, 0};
 
-    void Write(unsigned int bit);//å‘ç›®æ ‡æ–‡ä»¶å†™å…¥ä¸€ä¸ªbit
-    void WriteToOutfp();//å¼ºåˆ¶å†™å…¥ç›®æ ‡æ–‡ä»¶
+    void Write(unsigned int bit);//ÏòÄ¿±êÎÄ¼şĞ´ÈëÒ»¸öbit
+    void WriteToOutfp();//Ç¿ÖÆĞ´ÈëÄ¿±êÎÄ¼ş
 public:
     HuffmanCompress() = default;
 
@@ -45,7 +46,7 @@ void HuffmanCompress::Write(unsigned int bit) {
     buf.ch = (buf.ch << 1) | bit;
     if (buf.bits == 8) {
         outfp.write(&buf.ch, 1);
-        // é‡ç½®ç¼“å­˜åŒº
+        // ÖØÖÃ»º´æÇø
         buf.bits = 0;
         buf.ch = 0;
     }
@@ -61,12 +62,12 @@ void HuffmanCompress::WriteToOutfp() {
 }
 
 void HuffmanCompress::Zip() {
-    cout << "æ­£åœ¨å¤„ç†ï¼Œè¯·ç¨å€™..." << endl;
+    cout << "ÕıÔÚ´¦Àí£¬ÇëÉÔºò..." << endl;
 
     map<char, unsigned long> mp;
     unsigned long size = 0;
-    infp.clear();//æ¸…ç†æ–‡ä»¶æŒ‡é’ˆå½“å‰ä½ç½®
-    infp.seekg(0);//æ–‡ä»¶æŒ‡é’ˆæŒ‡å‘æ–‡ä»¶èµ·å§‹ä½ç½®
+    infp.clear();//ÇåÀíÎÄ¼şÖ¸Õëµ±Ç°Î»ÖÃ
+    infp.seekg(0);//ÎÄ¼şÖ¸ÕëÖ¸ÏòÎÄ¼şÆğÊ¼Î»ÖÃ
     char cha;
     infp.read(&cha, sizeof(char));
     int temp = 0;
@@ -83,17 +84,17 @@ void HuffmanCompress::Zip() {
     unsigned long w[temp];
     unsigned int n = 0;
     for (auto &it: mp) {
-        //åˆå§‹åŒ–å­—ç¬¦æ•°ç»„åŠå…¶æƒé‡
+        //³õÊ¼»¯×Ö·ûÊı×é¼°ÆäÈ¨ÖØ
         ch[n] = it.first;
         w[n] = it.second;
         size += w[n++];
     }
     pHuffmanTree = new HuffmanTree<char, unsigned long>(ch, w, n);
     outfp.clear();
-    outfp.seekp(0);//æ–‡ä»¶æŒ‡é’ˆæŒ‡å‘æ–‡ä»¶èµ·å§‹ä½ç½®
+    outfp.seekp(0);//ÎÄ¼şÖ¸ÕëÖ¸ÏòÎÄ¼şÆğÊ¼Î»ÖÃ
 
-    outfp.write((char *) &size, sizeof(unsigned long));//å‘ç›®æ ‡æ–‡ä»¶å†™å…¥æºæ–‡ä»¶çš„å¤§å°
-    outfp.write((char *) &n, sizeof(unsigned int));//å†™å…¥å­—ç¬¦ä¸ªæ•°
+    outfp.write((char *) &size, sizeof(unsigned long));//ÏòÄ¿±êÎÄ¼şĞ´ÈëÔ´ÎÄ¼şµÄ´óĞ¡
+    outfp.write((char *) &n, sizeof(unsigned int));//Ğ´Èë×Ö·û¸öÊı
     outfp.write(ch, n);
     outfp.write((char *) w, sizeof(unsigned long) * n);
     buf.bits = 0;
@@ -114,11 +115,11 @@ void HuffmanCompress::Zip() {
     infp.close();
     outfp.close();
     delete pHuffmanTree;
-    cout << "å¤„ç†ç»“æŸ!" << endl;
+    cout << "´¦Àí½áÊø!" << endl;
 }
 
 void HuffmanCompress::Unzip() {
-    cout << "æ­£åœ¨å¤„ç†ï¼Œè¯·ç¨å€™..." << endl;
+    cout << "ÕıÔÚ´¦Àí£¬ÇëÉÔºò..." << endl;
 
     unsigned int n, len = 0;
     unsigned long size;
@@ -139,7 +140,7 @@ void HuffmanCompress::Unzip() {
         CharString strTemp("");
         unsigned char c = (unsigned char) cha;
         for (unsigned int i = 0; i < 8; i++) {
-            //åˆ¤æ–­æœ€é«˜ä½ä¸º0/1
+            //ÅĞ¶Ï×î¸ßÎ»Îª0/1
             if (c < 128) Concat(strTemp, CharString("0"));
             else Concat(strTemp, CharString("1"));
             c = c << 1;
@@ -150,73 +151,84 @@ void HuffmanCompress::Unzip() {
             outfp.write(&str[i], sizeof(char));
             if (len == size) break;
         }
-        if (len == size) break;//è§£å‹å®Œæ¯•
+        if (len == size) break;//½âÑ¹Íê±Ï
         infp.read(&cha, sizeof(char));
     }
 
     infp.close();
     outfp.close();
     delete pHuffmanTree;
-    cout << "å¤„ç†ç»“æŸ!" << endl;
+    cout << "´¦Àí½áÊø!" << endl;
 }
 
 bool HuffmanCompress::Run() {
     int choice;
     Menu();
     cin >> choice;
-    CharString inFile;
-    CharString outFile;
+    cin.get();
+    string inFile;
+    string outFile;
+    clock_t start, end;
     switch (choice) {
         case 1:
-            cout << "è¯·è¾“å…¥å‹ç¼©æ–‡ä»¶: ";
+            cout << "ÇëÊäÈëÑ¹ËõÎÄ¼ş: ";
             cin >> inFile;
-            infp.open(inFile.CStr(), ios::in | ios::binary);
+            cin.get();
+            infp.open(inFile.c_str(), ios::in | ios::binary);
             if (infp.fail()) {
-                cout << "ERROR: æºæ–‡ä»¶æ‰“å¼€å¤±è´¥!" << endl;
+                cout << "ERROR: Ô´ÎÄ¼ş´ò¿ªÊ§°Ü!" << endl;
                 return true;
             }
             infp.get();
             if (infp.eof()) {
-                cout << "ERROR: æºæ–‡ä»¶ä¸ºç©º!" << endl;
+                cout << "ERROR: Ô´ÎÄ¼şÎª¿Õ!" << endl;
                 return true;
             }
-            cout << "è¯·è¾“å…¥ç›®æ ‡æ–‡ä»¶: ";
+            cout << "ÇëÊäÈëÄ¿±êÎÄ¼ş: ";
             cin >> outFile;
-            outfp.open(outFile.CStr(), ios::out | ios::binary);
+            cin.get();
+            outfp.open(outFile.c_str(), ios::out | ios::binary);
+            start = clock();
             Zip();
+            end = clock();
+            cout << "Ñ¹ËõÎÄ¼ş¹²Ê¹ÓÃ: " << (end - start) / CLOCKS_PER_SEC << "Ãë" << endl;
             return true;
         case 2:
-            cout << "è¯·è¾“å…¥è§£å‹æ–‡ä»¶: ";
+            cout << "ÇëÊäÈë½âÑ¹ÎÄ¼ş: ";
             cin >> inFile;
-            infp.open(inFile.CStr(), ios::in | ios::binary);
+            infp.open(inFile.c_str(), ios::in | ios::binary);
             if (infp.fail()) {
-                cout << "ERROR: æºæ–‡ä»¶æ‰“å¼€å¤±è´¥!" << endl;
+                cout << "ERROR: Ô´ÎÄ¼ş´ò¿ªÊ§°Ü!" << endl;
                 return true;
             }
             infp.get();
             if (infp.eof()) {
-                cout << "ERROR: æºæ–‡ä»¶ä¸ºç©º!" << endl;
+                cout << "ERROR: Ô´ÎÄ¼şÎª¿Õ!" << endl;
                 return true;
             }
-            cout << "è¯·è¾“å…¥ç›®æ ‡æ–‡ä»¶: ";
+            cout << "ÇëÊäÈëÄ¿±êÎÄ¼ş: ";
             cin >> outFile;
-            outfp.open(outFile.CStr(), ios::out | ios::binary);
+            cin.get();
+            outfp.open(outFile.c_str(), ios::out | ios::binary);
+            start = clock();
             Unzip();
+            end = clock();
+            cout << "½âÑ¹ÎÄ¼ş¹²Ê¹ÓÃ: " << (end - start) / CLOCKS_PER_SEC << "Ãë" << endl;
             return true;
         case 3:
-            cout << "é€€å‡ºç¨‹åº!" << endl;
+            cout << "ÍË³ö³ÌĞò!" << endl;
             return false;
         default:
-            cout << "è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°é€‰æ‹©" << endl;
+            cout << "ÊäÈë´íÎó£¬ÇëÖØĞÂÑ¡Ôñ" << endl;
             return true;
     }
 }
 
 void HuffmanCompress::Menu() {
     cout << "=====================" << endl;
-    cout << "      1.å‹ç¼©æ–‡ä»¶" << endl;
-    cout << "      2.è§£å‹æ–‡ä»¶" << endl;
-    cout << "        3.é€€å‡º" << endl;
+    cout << "      1.Ñ¹ËõÎÄ¼ş" << endl;
+    cout << "      2.½âÑ¹ÎÄ¼ş" << endl;
+    cout << "        3.ÍË³ö" << endl;
     cout << "=====================" << endl;
 }
 

@@ -72,6 +72,10 @@ double Calculator::Operate(double left, char theta, double right) {
             res = left * right;
             break;
         case '/':
+            if (right == 0) {
+                cout << "³ýÊý²»ÄÜÎª0!" << endl;
+                exit(2);
+            }
             res = left / right;
             break;
         case '^':
@@ -125,7 +129,7 @@ void Calculator::Run() {
                     optr.Push(ch);
                     cin >> ch;
                     break;
-                case '='://æ“ä½œç¬¦ä¸ºå·¦å³æ‹¬å·
+                case '='://²Ù×÷·ûÎª×óÓÒÀ¨ºÅ
                     optrTop = optr.Pop();
                     cin >> ch;
                     break;
@@ -141,7 +145,7 @@ void Calculator::Run() {
                     opnd.Push(res);
                     break;
                 case 'e':
-                    cout << "æ“ä½œæ•°åŒ¹é…é”™è¯¯" << endl;
+                    cout << "²Ù×÷ÊýÆ¥Åä´íÎó" << endl;
                     exit(1);
                 default:
                     break;

@@ -3,17 +3,17 @@
 //
 #include<iostream>
 #include<iomanip>
-#include"Node.h"
+#include"../Node.h"
 
 using namespace std;
 
-//Á´Ê½¶ÓÁÐ
+//ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 template<class ElemType>
 class LinkQueue {
 protected:
-    //·Ö±ð±íÊ¾¶ÔÍ·ºÍ¶ÓÎ²Ö¸Õë
+    //ï¿½Ö±ï¿½ï¿½Ê¾ï¿½ï¿½Í·ï¿½Í¶ï¿½Î²Ö¸ï¿½ï¿½
     Node<ElemType> *front, *rear;
-    //¶ÓÄÚÔªËØ¸öÊý
+    //ï¿½ï¿½ï¿½ï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½
     int count;
 public:
     LinkQueue();
@@ -66,7 +66,7 @@ template<class ElemType>
 void LinkQueue<ElemType>::PushBack(ElemType key) {
     auto *newNode = new Node<ElemType>(key, NULL);
     if (newNode == NULL) {
-        cout << "¶¯Ì¬ÄÚ´æÒÑÏûºÄÍê" << endl;
+        cout << "ï¿½ï¿½Ì¬ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
         exit(1);
     }
     rear->next = newNode;
@@ -77,7 +77,7 @@ void LinkQueue<ElemType>::PushBack(ElemType key) {
 template<class ElemType>
 ElemType LinkQueue<ElemType>::PopFront() {
     if (Empty()) {
-        cout << "¶ÓÁÐÒÑ¿Õ" << endl;
+        cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¿ï¿½" << endl;
         exit(1);
     } else {
         Node<ElemType> *tmpPtr = front->next;
@@ -95,7 +95,7 @@ ElemType LinkQueue<ElemType>::PopFront() {
 template<class ElemType>
 ElemType LinkQueue<ElemType>::GetHead() const {
     if (Empty()) {
-        cout << "¶ÓÁÐÒÑ¿Õ" << endl;
+        cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¿ï¿½" << endl;
         exit(1);
     } else {
         Node<ElemType> *tmpPtr = front->next;
@@ -134,7 +134,7 @@ LinkQueue<ElemType>::~LinkQueue() {
 }
 
 
-//Ñ­»·¶ÓÁÐ
+//Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 template<class ElemType>
 class SqQueue {
 protected:
@@ -191,7 +191,7 @@ bool SqQueue<ElemType>::Full() const {
 template<class ElemType>
 void SqQueue<ElemType>::PushBack(ElemType key) {
     if (Full()) {
-        cout << "¶ÓÁÐÒÑÂú" << endl;
+        cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
         exit(1);
     } else {
         q[rear] = key;
@@ -202,7 +202,7 @@ void SqQueue<ElemType>::PushBack(ElemType key) {
 template<class ElemType>
 ElemType SqQueue<ElemType>::PopFront() {
     if (Empty()) {
-        cout << "¶ÓÁÐÒÑ¿Õ" << endl;
+        cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¿ï¿½" << endl;
         exit(1);
     } else {
         ElemType elem = q[front];
@@ -214,7 +214,7 @@ ElemType SqQueue<ElemType>::PopFront() {
 template<class ElemType>
 ElemType SqQueue<ElemType>::GetHead() const {
     if (Empty()) {
-        cout << "¶ÓÁÐÒÑ¿Õ" << endl;
+        cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¿ï¿½" << endl;
         exit(1);
     } else {
         ElemType elem = q[front];

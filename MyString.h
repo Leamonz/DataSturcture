@@ -7,6 +7,7 @@
 
 #include<cstring>
 #include<iostream>
+#include "MyList.h"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ public:
 
     explicit CharString(const char *copy);
 
-    CharString(const SimpleLinkList<char> &copy);
+    explicit CharString(const SimpleLinkList<char> &copy);
 
     virtual ~CharString();
 
@@ -40,6 +41,8 @@ public:
     void reversed();//·­×ª×Ö·û´®
 
     CharString &operator=(const CharString &copy);
+
+    CharString &operator=(const SimpleLinkList<char> &copy);
 
     int search(const CharString &sub, CharString &res);
 
@@ -136,9 +139,9 @@ ostream &operator<<(ostream &out, const CharString &s) {
 }
 
 istream &operator>>(istream &in, CharString &s) {
-    char *tmp = new char[s.len];
-    cin >> tmp;
-    s = CharString(tmp);
+    char *temp = new char[s.len + 1];
+    cin >> temp;
+    CStrcpy(s.str, temp);
     return in;
 }
 

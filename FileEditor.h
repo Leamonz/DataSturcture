@@ -6,10 +6,10 @@
 #define UTILS_HPP_FILEEDITOR_H
 
 #include "MyString.h"
-#include"MyList.h"
+#include "MyList.h"
 #include <iostream>
 #include <fstream>
-#include<cctype>
+#include <cctype>
 
 using namespace std;
 
@@ -73,9 +73,11 @@ void Editor::Run() {
     outFile.open(outfName, ios::out | ios::app);
     if (inFile.fail()) {
         cout << "没有以下文件: " << infName << endl;
+        exit(1);
     }
     if (outFile.fail()) {
         cout << "输出文件打开失败" << endl;
+        exit(2);
     }
     ReadFile();
     while ((userCommand = GetCommand()) != 'q') {
@@ -122,6 +124,13 @@ void Editor::RunCommand(char ch) {
             break;
         case 'q':
             cout << "程序结束！" << endl;
+            char ch;
+            cout << "是否将缓存区内容保存到目的文件中?(Y/N): ";
+            ch = cin.get();
+            if (tolower(ch) == 'y') {
+                cout << "缓存区内容已经写入目的文件！" << endl;
+                WriteFile();
+            }
             break;
         case 'd':
             cout << "请输入要删除的行数: ";
@@ -199,9 +208,9 @@ void Editor::RunCommand(char ch) {
             cout << "有效指令：" << endl;
             cout << "b(begin), e(end), i(insert), d(delete), c(change), g(goto), " << endl;
             cout << "v(view), r(read), w(write), ?/h(help), n(next), p(prior)" << endl;
-            break;
         default:
-            cout << "请输入?/h以获取帮助" << endl;
+            cout << "可以输入?/h以获取帮助" << endl;
+            break;
     }
 }
 
@@ -273,12 +282,15 @@ void Editor::WriteFile() {
     CharString Line;
     for (int i = 1; i <= StringBuffer.Length(); i++) {
         Line = StringBuffer.GetElem(i);
-        outFile << i << ": " << Line << endl;
+        outFile << Line << endl;
     }
+    cout << "已将缓存区内容输出到指定文件中！" << endl;
 }
 
 void Editor::ReadFile() {
     CharString Line;
+    inFile.clear();
+    inFile.seekg(0);
     Line = Read(inFile);
     StringBuffer.Insert(StringBuffer.Length() + 1, Line);
     while (!inFile.eof()) {

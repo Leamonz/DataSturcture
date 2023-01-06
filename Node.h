@@ -35,7 +35,6 @@ struct DblNode {
     DblNode<ElemType> *next;
 
     DblNode() {
-        data = 0;
         prev = NULL;
         next = NULL;
     }

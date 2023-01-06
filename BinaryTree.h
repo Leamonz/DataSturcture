@@ -32,7 +32,6 @@ struct BinTreeNode {
 
 template<class ElemType>
 class BinaryTree {
-
 protected:
 // 数据成员:
     BinTreeNode<ElemType> *root;

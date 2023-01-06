@@ -9,7 +9,7 @@
 
 using namespace std;
 
-//È°∫Â∫èÊ†à
+//À≥–Ú’ª
 template<class ElemType>
 class SqStack {
 protected:
@@ -65,7 +65,7 @@ bool SqStack<ElemType>::Empty() const {
 template<class ElemType>
 void SqStack<ElemType>::Push(const ElemType &key) {
     if (Full()) {
-        cout << "Ê†àÂ∑≤Êª°" << endl;
+        cout << "’ª“—¬˙" << endl;
         return;
     } else {
         stack[count++] = key;
@@ -75,7 +75,7 @@ void SqStack<ElemType>::Push(const ElemType &key) {
 template<class ElemType>
 ElemType SqStack<ElemType>::Pop() {
     if (Empty()) {
-        cout << "Ê†àÂ∑≤Á©∫" << endl;
+        cout << "’ª“—ø’" << endl;
         return 0;
     } else {
         ElemType elem = stack[--count];
@@ -119,7 +119,7 @@ SqStack<ElemType>::~SqStack() {
 }
 
 
-//ÈìæÂºèÊ†à
+//¡¥ Ω’ª
 template<class ElemType>
 struct StackNode {
     ElemType data;
@@ -197,7 +197,7 @@ template<class ElemType>
 void LinkStack<ElemType>::Push(const ElemType &key) {
     auto *newNode = new StackNode<ElemType>(key, top);
     if (newNode == NULL) {
-        cout << "Âä®ÊÄÅÂÜÖÂ≠òËÄóÂ∞Ω" << endl;
+        cout << "∂ØÃ¨ƒ⁄¥Ê∫ƒæ°" << endl;
     } else {
         top = newNode;
         count++;
@@ -207,7 +207,7 @@ void LinkStack<ElemType>::Push(const ElemType &key) {
 template<class ElemType>
 ElemType LinkStack<ElemType>::Pop() {
     if (Empty()) {
-        cout << "Ê†àÂ∑≤Á©∫" << endl;
+        cout << "’ª“—ø’" << endl;
         return 0;
     } else {
         StackNode<ElemType> *tmpPtr;
@@ -223,7 +223,7 @@ ElemType LinkStack<ElemType>::Pop() {
 template<class ElemType>
 ElemType LinkStack<ElemType>::GetHead() {
     if (Empty()) {
-        cout << "Ê†àÂ∑≤Á©∫" << endl;
+        cout << "’ª“—ø’" << endl;
         return 0;
     } else {
         return top->data;
@@ -238,7 +238,7 @@ LinkStack<ElemType>::LinkStack(const LinkStack<ElemType> &copy) {
     } else {
         //copy isn't empty stack
         top = new StackNode<ElemType>(copy.top->data, NULL);
-        StackNode<ElemType> *buttomPtr = top;//ÂΩìÂâçÊ†àÂ∫ï
+        StackNode<ElemType> *buttomPtr = top;//µ±«∞’ªµ◊
         for (StackNode<ElemType> *tmpPtr = copy.top->next; tmpPtr != NULL; tmpPtr = tmpPtr->next) {
             buttomPtr->next = new StackNode<ElemType>(tmpPtr->data, NULL);
             buttomPtr = buttomPtr->next;
@@ -256,7 +256,7 @@ LinkStack<ElemType> &LinkStack<ElemType>::operator=(const LinkStack<ElemType> &c
         } else {
 //        copy isn't empty stack
             top = new StackNode<ElemType>(copy.top->data, NULL);
-            StackNode<ElemType> *buttomPtr = top;//ÂΩìÂâçÊ†àÂ∫ï
+            StackNode<ElemType> *buttomPtr = top;//µ±«∞’ªµ◊
             for (StackNode<ElemType> *tmpPtr = copy.top->next; tmpPtr != NULL; tmpPtr = tmpPtr->next) {
                 buttomPtr->next = new StackNode<ElemType>(tmpPtr->data, NULL);
                 buttomPtr = buttomPtr->next;

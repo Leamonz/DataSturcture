@@ -2,7 +2,7 @@
 // Created by HP on 2022/9/17.
 //
 #include<iostream>
-#include"MyStack.h"
+#include"../MyStack.h"
 
 using namespace std;
 //const char operators[7] = {'+', '-', '*', '/', '(', ')', '='};
@@ -18,16 +18,16 @@ using namespace std;
 //
 //class Calculator {
 //private:
-//    static bool isOperator(char theta);//ÅÐ¶ÏÊÇ·ñÎª²Ù×÷·û
-//    static char Precede(char theta1, char theta2);//¼ÆËãÁ½¸ö²Ù×÷·ûµÄÓÅÏÈ¼¶
-//    static double Operate(double left, char theta, double right);//¼ÆËã left theta right µÄÖµ²¢·µ»Ø
-//    static void Get2Operands(LinkStack<double> &opnd, double &left, double &right);//·µ»ØÁ½¸ö²Ù×÷Êý
+//    static bool isOperator(char theta);//ï¿½Ð¶ï¿½ï¿½Ç·ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//    static char Precede(char theta1, char theta2);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½
+//    static double Operate(double left, char theta, double right);//ï¿½ï¿½ï¿½ï¿½ left theta right ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//    static void Get2Operands(LinkStack<double> &opnd, double &left, double &right);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //public:
 //    Calculator() = default;
 //
 //    virtual ~Calculator() = default;
 //
-//    static void Run();//ÔËÐÐ³ÌÐò
+//    static void Run();//ï¿½ï¿½ï¿½Ð³ï¿½ï¿½ï¿½
 //};
 //
 //bool Calculator::isOperator(char theta) {
@@ -50,7 +50,7 @@ using namespace std;
 //        case '/':
 //            return left / right;
 //        default:
-//            cout << "ÔËËã·û´íÎó" << endl;
+//            cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
 //            exit(1);
 //    }
 //}
@@ -88,7 +88,7 @@ using namespace std;
 //                    cin >> ch;
 //                    break;
 //                case '=':
-//                    optrTop = optr.Pop();//ÍÑÀ¨ºÅ
+//                    optrTop = optr.Pop();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //                    cin >> ch;
 //                    break;
 //                case '>':
@@ -98,20 +98,20 @@ using namespace std;
 //                    opnd.Push(Operate(left, theta, right));
 //                    break;
 //                case 'e':
-//                    cout << "²Ù×÷·ûÆ¥Åä´íÎó" << endl;
+//                    cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
 //                    exit(2);
 //                default:
 //                    break;
 //            }
 //        } else {
-//            cin.putback(ch);//Èç¹û²»ÊÇÔËËã·ûÔò½«×Ö·ûch·µ»ØÊäÈëÁ÷
+//            cin.putback(ch);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½chï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //            cin >> operand;
 //            opnd.Push(operand);
 //            cin >> ch;
 //        }
 //    }
 //    double result = opnd.Pop();
-//    cout << "±í´ïÊ½µÄÖµÎª£º" << result << endl;
+//    cout << "ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ÖµÎªï¿½ï¿½" << result << endl;
 //}
 //
 //int main() {

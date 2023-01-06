@@ -20,8 +20,8 @@ enum StatusCode {
 // 邻接表图顶点
 template<class ElemType>
 struct AdjListGraphVexNode {
-    ElemType data; //元素值
-    SimpleLinkList<int> *adjLink;//邻接链表
+    ElemType data{}; //元素值
+    SimpleLinkList<int> *adjLink{};//邻接链表
 
     AdjListGraphVexNode();
 
@@ -32,7 +32,6 @@ struct AdjListGraphVexNode {
 
 template<class ElemType>
 AdjListGraphVexNode<ElemType>::AdjListGraphVexNode() {
-    data = 0;
     adjLink = nullptr;
 }
 
@@ -120,11 +119,11 @@ int AdjListDirGraph<ElemType>::IndexHelp(const SimpleLinkList<int> *la, int v) c
 template<class ElemType>
 int AdjListDirGraph<ElemType>::FirstAdjVex(int v) const {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+//        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
         return -1;
     }
     if (vexTable[v].adjLink == nullptr) {
-        cerr << "No Adjacent Vertexes" << endl;
+//        cout << "No Adjacent Vertexes" << endl;
         return -1;// 空邻接表，不存在邻接点
     } else {
         return vexTable[v].adjLink->GetElem(1);
@@ -134,24 +133,24 @@ int AdjListDirGraph<ElemType>::FirstAdjVex(int v) const {
 template<class ElemType>
 int AdjListDirGraph<ElemType>::NextAdjVex(int v1, int v2) const {
     if (v1 < 0 || v1 >= vexNum) {
-        cerr << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
+//        cout << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
         return -1;
     } else if (v2 < 0 || v2 >= vexNum) {
-        cerr << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
+//        cout << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
         return -1;
     } else if (v1 == v2) {
-        cerr << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
+//        cout << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
         return -1;
     }
     if (vexTable[v1].adjLink == nullptr) {
-        cerr << "No Adjacent Vertexes" << endl;
+//        cout << "No Adjacent Vertexes" << endl;
         return -1;// 空邻接表，不存在邻接点
     }
     int pos = IndexHelp(vexTable[v1].adjLink, v2);
     if (pos < vexTable[v1].adjLink->Length()) {
         return vexTable[v1].adjLink->GetElem(pos + 1);
     } else {
-        cerr << v2 << " is the last adjacent vertex to " << v1 << endl;
+//        cout << v2 << " is the last adjacent vertex to " << v1 << endl;
         return -1;
     }
 }
@@ -159,7 +158,7 @@ int AdjListDirGraph<ElemType>::NextAdjVex(int v1, int v2) const {
 template<class ElemType>
 bool AdjListDirGraph<ElemType>::GetElem(int v, ElemType &e) const {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+//        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
         return false;
     } else {
         e = vexTable[v].data;
@@ -170,7 +169,7 @@ bool AdjListDirGraph<ElemType>::GetElem(int v, ElemType &e) const {
 template<class ElemType>
 bool AdjListDirGraph<ElemType>::SetElem(int v, const ElemType &e) {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+//        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
         return false;
     } else {
         vexTable[v].data = e;
@@ -181,28 +180,30 @@ bool AdjListDirGraph<ElemType>::SetElem(int v, const ElemType &e) {
 template<class ElemType>
 void AdjListDirGraph<ElemType>::InsertEdge(int v1, int v2) {
     if (v1 < 0 || v1 >= vexNum) {
-        cerr << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
+//        cout << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
         return;
     } else if (v2 < 0 || v2 >= vexNum) {
-        cerr << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
+//        cout << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
         return;
     } else if (v1 == v2) {
-        cerr << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
+//        cout << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
         return;
     }
+    if (vexTable[v1].adjLink == nullptr)
+        vexTable[v1].adjLink = new SimpleLinkList<int>;
     vexTable[v1].adjLink->Insert(vexTable[v1].adjLink->Length() + 1, v2);
 }
 
 template<class ElemType>
 void AdjListDirGraph<ElemType>::DeleteEdge(int v1, int v2) {
     if (v1 < 0 || v1 >= vexNum) {
-        cerr << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
+//        cout << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
         return;
     } else if (v2 < 0 || v2 >= vexNum) {
-        cerr << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
+//        cout << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
         return;
     } else if (v1 == v2) {
-        cerr << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
+//        cout << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
         return;
     }
     int pos = IndexHelp(vexTable[v1].adjLink, v2);
@@ -212,7 +213,7 @@ void AdjListDirGraph<ElemType>::DeleteEdge(int v1, int v2) {
 template<class ElemType>
 StatusCode AdjListDirGraph<ElemType>::GetTag(int v) const {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+//        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
     }
     return tags[v];
 }
@@ -220,7 +221,7 @@ StatusCode AdjListDirGraph<ElemType>::GetTag(int v) const {
 template<class ElemType>
 void AdjListDirGraph<ElemType>::SetTag(int v, StatusCode t) {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+//        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
         return;
     }
     tags[v] = t;
@@ -395,7 +396,7 @@ int AdjListDirNet<ElemType, WeightType>::IndexHelp(const SimpleLinkList<AdjListN
 template<class ElemType, class WeightType>
 bool AdjListDirNet<ElemType, WeightType>::GetElem(int v, ElemType &e) const {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
         return false;
     }
     e = vexTable[v].data;
@@ -405,7 +406,7 @@ bool AdjListDirNet<ElemType, WeightType>::GetElem(int v, ElemType &e) const {
 template<class ElemType, class WeightType>
 bool AdjListDirNet<ElemType, WeightType>::SetElem(int v, ElemType &e) {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
         return false;
     }
     vexTable[v].data = e;
@@ -430,11 +431,11 @@ int AdjListDirNet<ElemType, WeightType>::GetVexNum() const {
 template<class ElemType, class WeightType>
 int AdjListDirNet<ElemType, WeightType>::FirstAdjVex(int v) const {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
         return -1;
     }
     if (vexTable[v].adjLink == nullptr) {
-        cerr << "No Adjacent Vertexes" << endl;
+        cout << "No Adjacent Vertexes" << endl;
         return -1;
     }
     return vexTable[v].adjLink->GetElem(1).vex;
@@ -443,20 +444,20 @@ int AdjListDirNet<ElemType, WeightType>::FirstAdjVex(int v) const {
 template<class ElemType, class WeightType>
 int AdjListDirNet<ElemType, WeightType>::NextAdjVex(int v1, int v2) const {
     if (v1 < 0 || v1 >= vexNum) {
-        cerr << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
+        cout << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
         return -1;
     } else if (v2 < 0 || v2 >= vexNum) {
-        cerr << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
+        cout << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
         return -1;
     } else if (v1 == v2) {
-        cerr << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
+        cout << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
         return -1;
     }
     int pos = IndexHelp(vexTable[v1].adjLink, v2);
     if (pos < vexTable[v1].adjLink->Length()) {
         return vexTable[v1].adjLink->GetElem(pos + 1).vex;
     } else {
-        cerr << v2 << " is the last adjacent vertex to " << v1 << endl;
+        cout << v2 << " is the last adjacent vertex to " << v1 << endl;
         return -1;
     }
 }
@@ -464,13 +465,13 @@ int AdjListDirNet<ElemType, WeightType>::NextAdjVex(int v1, int v2) const {
 template<class ElemType, class WeightType>
 void AdjListDirNet<ElemType, WeightType>::InsertEdge(int v1, int v2, WeightType w) {
     if (v1 < 0 || v1 >= vexNum) {
-        cerr << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
+        cout << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
         return;
     } else if (v2 < 0 || v2 >= vexNum) {
-        cerr << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
+        cout << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
         return;
     } else if (v1 == v2) {
-        cerr << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
+        cout << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
         return;
     }
     vexTable[v1].adjLink->Insert(AdjListNetEdge<WeightType>(v2, w));
@@ -479,13 +480,13 @@ void AdjListDirNet<ElemType, WeightType>::InsertEdge(int v1, int v2, WeightType 
 template<class ElemType, class WeightType>
 void AdjListDirNet<ElemType, WeightType>::DeleteEdge(int v1, int v2) {
     if (v1 < 0 || v1 >= vexNum) {
-        cerr << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
+        cout << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
         return;
     } else if (v2 < 0 || v2 >= vexNum) {
-        cerr << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
+        cout << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
         return;
     } else if (v1 == v2) {
-        cerr << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
+        cout << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
         return;
     }
     int pos = IndexHelp(vexTable[v1].adjLink, v2);
@@ -495,13 +496,13 @@ void AdjListDirNet<ElemType, WeightType>::DeleteEdge(int v1, int v2) {
 template<class ElemType, class WeightType>
 bool AdjListDirNet<ElemType, WeightType>::GetWeight(int v1, int v2, WeightType &w) const {
     if (v1 < 0 || v1 >= vexNum) {
-        cerr << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
+        cout << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
         return -1;
     } else if (v2 < 0 || v2 >= vexNum) {
-        cerr << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
+        cout << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
         return -1;
     } else if (v1 == v2) {
-        cerr << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
+        cout << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
         return -1;
     }
     int pos = IndexHelp(vexTable[v1].adjLink, v2);
@@ -512,13 +513,13 @@ bool AdjListDirNet<ElemType, WeightType>::GetWeight(int v1, int v2, WeightType &
 template<class ElemType, class WeightType>
 bool AdjListDirNet<ElemType, WeightType>::SetWeight(int v1, int v2, WeightType &w) {
     if (v1 < 0 || v1 >= vexNum) {
-        cerr << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
+        cout << "v1 should be in range[" << 0 << "," << vexNum - 1 << "] but v1=" << v1 << endl;
         return -1;
     } else if (v2 < 0 || v2 >= vexNum) {
-        cerr << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
+        cout << "v2 should be in range[" << 0 << "," << vexNum - 1 << "] but v2=" << v2 << endl;
         return -1;
     } else if (v1 == v2) {
-        cerr << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
+        cout << "v1 can't be equal to v2, but get v1=" << v1 << ", v2=" << v2 << endl;
         return -1;
     }
     int pos = IndexHelp(vexTable[v1].adjLink, v2);
@@ -529,7 +530,7 @@ bool AdjListDirNet<ElemType, WeightType>::SetWeight(int v1, int v2, WeightType &
 template<class ElemType, class WeightType>
 bool AdjListDirNet<ElemType, WeightType>::GetTag(int v, StatusCode &code) const {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
         return false;
     }
     code = tags[v];
@@ -539,7 +540,7 @@ bool AdjListDirNet<ElemType, WeightType>::GetTag(int v, StatusCode &code) const 
 template<class ElemType, class WeightType>
 bool AdjListDirNet<ElemType, WeightType>::SetTag(int v, StatusCode &code) {
     if (v < 0 || v >= vexNum) {
-        cerr << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
+        cout << "v should be in range[" << 0 << "," << vexNum - 1 << "] but v=" << v << endl;
         return false;
     }
     tags[v] = code;
@@ -692,7 +693,7 @@ bool TopologicalSort(const AdjListDirGraph<ElemType> &graph, LinkStack<int> *Top
 
     while (!q.Empty()) {
         int v = q.PopFront();
-        TopRes->Push(v);//保存拓扑排序的逆序列
+        if (TopRes != nullptr) TopRes->Push(v);//保存拓扑排序的逆序列
         graph.SetTag(v, Traversed);
         for (int w = graph.FirstAdjVex(v); w >= 0; w = graph.NextAdjVex(v, w)) {
             if (graph.GetTag(w) == Traversed) continue;

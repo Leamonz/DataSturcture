@@ -127,9 +127,9 @@ void SqList<ElemType>::Insert(int pos, const ElemType &key) {
 template<class ElemType>
 SqList<ElemType> &SqList<ElemType>::operator=(const SqList<ElemType> &copy) {
     if (&copy != this) {
-        if (sqList != NULL) {
+        if (sqList != nullptr) {
             delete[] sqList;
-            sqList = NULL;
+            sqList = nullptr;
         }
         count = copy.count;
         maxSize = copy.maxSize;
@@ -198,29 +198,29 @@ template<class ElemType>
 Node<ElemType> *SimpleLinkList<ElemType>::GetElemPtr(int pos) const {
     Node<ElemType> *node = head;
     int curPos = 0;
-    while (node != NULL && curPos != pos) {
+    while (node != nullptr && curPos != pos) {
         node = node->next;
         curPos++;
     }
-    if (node != NULL && curPos == pos) {
+    if (node != nullptr && curPos == pos) {
         //查找成功
         return node;
     } else {
         //查找失败
-        return NULL;
+        return nullptr;
     }
 }
 
 template<class ElemType>
 SimpleLinkList<ElemType>::SimpleLinkList() {
-    head = new Node<ElemType>(0, NULL);
+    head = new Node<ElemType>(0, nullptr);
 }
 
 template<class ElemType>
 int SimpleLinkList<ElemType>::Length() const {
     int count = 0;
     Node<ElemType> *tmpPtr = head->next;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         count++;
         tmpPtr = tmpPtr->next;
     }
@@ -229,7 +229,7 @@ int SimpleLinkList<ElemType>::Length() const {
 
 template<class ElemType>
 bool SimpleLinkList<ElemType>::Empty() const {
-    return head->next == NULL;
+    return head->next == nullptr;
 }
 
 template<class ElemType>
@@ -299,22 +299,12 @@ void SimpleLinkList<ElemType>::Delete(int pos) {
 
 template<class ElemType>
 void SimpleLinkList<ElemType>::reverse() {
-    Node<ElemType> *tmpPtr, *nextPtr, *curPtr;
-    nextPtr = head->next;
-    curPtr = nextPtr->next;
-    while (curPtr != NULL) {
-        if (nextPtr == head->next) {
-            nextPtr->next = NULL;
-        }
+    Node<ElemType> *tmpPtr = nullptr, *nextPtr = nullptr, *curPtr;
+    curPtr = head->next;
+    while (curPtr != nullptr) {
         tmpPtr = curPtr->next;
         curPtr->next = nextPtr;
-        if (tmpPtr == NULL) {
-            nextPtr = curPtr;
-            break;
-        }
-        nextPtr = tmpPtr;
-        tmpPtr = nextPtr->next;
-        nextPtr->next = curPtr;
+        nextPtr = curPtr;
         curPtr = tmpPtr;
     }
     head->next = nextPtr;
@@ -322,9 +312,9 @@ void SimpleLinkList<ElemType>::reverse() {
 
 template<class ElemType>
 SimpleLinkList<ElemType>::SimpleLinkList(const SimpleLinkList<ElemType> &copy) {
-    head = new Node<ElemType>(0, NULL);
+    head = new Node<ElemType>(0, nullptr);
     Node<ElemType> *tmpPtr = copy.head->next;
-    for (; tmpPtr != NULL; tmpPtr = tmpPtr->next) {
+    for (; tmpPtr != nullptr; tmpPtr = tmpPtr->next) {
         Insert(Length() + 1, tmpPtr->data);
     }
 }
@@ -338,9 +328,9 @@ template<class ElemType>
 SimpleLinkList<ElemType> &SimpleLinkList<ElemType>::operator=(const SimpleLinkList<ElemType> &copy) {
     if (&copy != this) {
         Clear();
-        head = new Node<ElemType>(0, NULL);
+        head = new Node<ElemType>(0, nullptr);
         Node<ElemType> *tmpPtr = copy.head->next;
-        for (; tmpPtr != NULL; tmpPtr = tmpPtr->next) {
+        for (; tmpPtr != nullptr; tmpPtr = tmpPtr->next) {
             Insert(Length() + 1, tmpPtr->data);
         }
     }
@@ -401,7 +391,7 @@ Node<ElemType> *CircleLinkList<ElemType>::GetElemPtr(int pos) const {
         return tmpPtr;
     } else {
         //查找失败
-        return NULL;
+        return nullptr;
     }
 }
 
