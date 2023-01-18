@@ -9,15 +9,14 @@
 
 template<class ElemType>
 struct Node {
-    ElemType data;
+    ElemType data{};
     Node<ElemType> *next;
 
     Node() {
-        data = 0;
-        next = NULL;
+        next = nullptr;
     }
 
-    Node(ElemType data, Node<ElemType> *n) {
+    explicit Node(ElemType data, Node<ElemType> *n = nullptr) {
         this->data = data;
         next = n;
     }
@@ -30,16 +29,16 @@ struct Node {
 
 template<class ElemType>
 struct DblNode {
-    ElemType data;
+    ElemType data{};
     DblNode<ElemType> *prev;
     DblNode<ElemType> *next;
 
     DblNode() {
-        prev = NULL;
-        next = NULL;
+        prev = nullptr;
+        next = nullptr;
     }
 
-    DblNode(ElemType data, DblNode<ElemType> *p, DblNode<ElemType> *n) {
+    explicit DblNode(ElemType data, DblNode<ElemType> *p = nullptr, DblNode<ElemType> *n = nullptr) {
         this->data = data;
         prev = p;
         next = n;

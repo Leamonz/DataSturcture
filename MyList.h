@@ -27,10 +27,10 @@ public:
     int Length() const;//返回顺序表长度
     bool Empty() const;//判断顺序表是否为空
     void Clear();//清空顺序表
-    void Traverse(void(*Visit)(ElemType &));
+    void Traverse(void(*Visit)(ElemType &)) const;
 
-    ElemType GetElem(int pos) const;//返回指定位置的元素
-    void SetElem(int pos, const ElemType &key);//设置指定位置的元素
+    bool GetElem(int pos, ElemType &elem) const;//返回指定位置的元素
+    bool SetElem(int pos, const ElemType &key);//设置指定位置的元素
     void Delete(int pos);//删除指定位置的元素
     void Insert(int pos, const ElemType &key);//在指定位置插入指定的值
     SqList<ElemType> &operator=(const SqList<ElemType> &copy);//重载赋值运算符
@@ -63,31 +63,32 @@ void SqList<ElemType>::Clear() {
     count = 0;
 }
 
-
 template<class ElemType>
-void SqList<ElemType>::Traverse(void (*Visit)(ElemType &)) {
-    for (int i = 1; i <= Length(); i++) {
-        Visit(sqList[i - 1]);
+void SqList<ElemType>::Traverse(void (*Visit)(ElemType &)) const {
+    for (int i = 0; i < Length(); i++) {
+        Visit(sqList[i]);
     }
 }
 
 template<class ElemType>
-ElemType SqList<ElemType>::GetElem(int pos) const {
+bool SqList<ElemType>::GetElem(int pos, ElemType &elem) const {
     if (pos < 1 || pos > Length()) {
         cout << "位置错误\n";
-        return 0;
+        return false;
     } else {
-        return sqList[pos - 1];
+        elem = sqList[pos - 1];
+        return true;
     }
 }
 
 template<class ElemType>
-void SqList<ElemType>::SetElem(int pos, const ElemType &key) {
+bool SqList<ElemType>::SetElem(int pos, const ElemType &key) {
     if (pos < 1 || pos > Length()) {
         cout << "位置错误\n";
-        return;
+        return false;
     } else {
         sqList[pos - 1] = key;
+        return true;
     }
 }
 
@@ -134,7 +135,7 @@ SqList<ElemType> &SqList<ElemType>::operator=(const SqList<ElemType> &copy) {
         count = copy.count;
         maxSize = copy.maxSize;
         sqList = new ElemType[maxSize];
-        for (int i = 0; i < copy.count; i++) {
+        for (int i = 0; i < count; i++) {
             sqList[i] = copy.sqList[i];
         }
     }
@@ -146,14 +147,17 @@ SqList<ElemType>::SqList(const SqList<ElemType> &copy) {
     count = copy.count;
     maxSize = copy.maxSize;
     sqList = new ElemType[maxSize];
-    for (int i = 0; i < copy.count; i++) {
+    for (int i = 0; i < count; i++) {
         sqList[i] = copy.sqList[i];
     }
 }
 
 template<class ElemType>
 SqList<ElemType>::~SqList() {
-    delete[] sqList;
+    if (sqList != nullptr) {
+        delete[] sqList;
+        sqList = nullptr;
+    }
 }
 
 
@@ -162,6 +166,9 @@ template<class ElemType>
 class SimpleLinkList {
 protected:
     Node<ElemType> *head;
+    mutable int curPos;
+    mutable Node<ElemType> *curPtr;
+    int count;
 
     //辅助函数
     Node<ElemType> *GetElemPtr(int pos) const;//返回第pos个结点的指针
@@ -177,11 +184,11 @@ public:
 
     void Clear();//清空链表
 
-    void Traverse(void(*Visit)(ElemType &));//遍历链表元素并执行Visit函数
+    void Traverse(void(*Visit)(ElemType &)) const;//遍历链表元素并执行Visit函数
 
-    ElemType GetElem(int pos) const;//获取pos上的元素
+    bool GetElem(int pos, ElemType &elem) const;//获取pos上的元素
 
-    void SetElem(int pos, ElemType key);//改变pos上的元素
+    bool SetElem(int pos, const ElemType &key);//改变pos上的元素
 
     void Delete(int pos);//删除pos上的元素
 
@@ -196,34 +203,49 @@ public:
 
 template<class ElemType>
 Node<ElemType> *SimpleLinkList<ElemType>::GetElemPtr(int pos) const {
-    Node<ElemType> *node = head;
-    int curPos = 0;
-    while (node != nullptr && curPos != pos) {
-        node = node->next;
-        curPos++;
-    }
-    if (node != nullptr && curPos == pos) {
-        //查找成功
-        return node;
-    } else {
-        //查找失败
+    if (pos < 0 || pos > Length()) {
         return nullptr;
     }
+    if (curPos > pos) {
+        curPtr = head;
+        curPos = 0;
+    }
+    while (curPos != pos) {
+        curPtr = curPtr->next;
+        curPos++;
+    }
+    return curPtr;
+//    Node<ElemType> *node = head;
+//    int curPos = 0;
+//    while (node != nullptr && curPos != pos) {
+//        node = node->next;
+//        curPos++;
+//    }
+//    if (node != nullptr && curPos == pos) {
+//        //查找成功
+//        return node;
+//    } else {
+//        //查找失败
+//        return nullptr;
+//    }
 }
 
 template<class ElemType>
 SimpleLinkList<ElemType>::SimpleLinkList() {
-    head = new Node<ElemType>(0, nullptr);
+    head = new Node<ElemType>();
+    curPtr = head;
+    curPos = 0;
+    count = 0;
 }
 
 template<class ElemType>
 int SimpleLinkList<ElemType>::Length() const {
-    int count = 0;
-    Node<ElemType> *tmpPtr = head->next;
-    while (tmpPtr != nullptr) {
-        count++;
-        tmpPtr = tmpPtr->next;
-    }
+//    int count = 0;
+//    Node<ElemType> *tmpPtr = head->next;
+//    while (tmpPtr != nullptr) {
+//        count++;
+//        tmpPtr = tmpPtr->next;
+//    }
     return count;
 }
 
@@ -240,7 +262,7 @@ void SimpleLinkList<ElemType>::Clear() {
 }
 
 template<class ElemType>
-void SimpleLinkList<ElemType>::Traverse(void(*Visit)(ElemType &)) {
+void SimpleLinkList<ElemType>::Traverse(void(*Visit)(ElemType &)) const {
     for (int i = 1; i <= Length(); i++) {
         Node<ElemType> *tmpPtr = GetElemPtr(i);
         Visit(tmpPtr->data);
@@ -248,24 +270,26 @@ void SimpleLinkList<ElemType>::Traverse(void(*Visit)(ElemType &)) {
 }
 
 template<class ElemType>
-ElemType SimpleLinkList<ElemType>::GetElem(int pos) const {
+bool SimpleLinkList<ElemType>::GetElem(int pos, ElemType &elem) const {
     if (pos < 1 || pos > Length()) {
         cout << "位置错误" << endl;
-        return 0;
+        return false;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos);
-        return tmpPtr->data;
+        elem = tmpPtr->data;
+        return true;
     }
 }
 
 template<class ElemType>
-void SimpleLinkList<ElemType>::SetElem(int pos, ElemType key) {
+bool SimpleLinkList<ElemType>::SetElem(int pos, const ElemType &key) {
     if (pos < 1 || pos > Length()) {
         cout << "位置错误" << endl;
-        return;
+        return false;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos);
         tmpPtr->data = key;
+        return true;
     }
 
 }
@@ -281,6 +305,9 @@ void SimpleLinkList<ElemType>::Insert(int pos, ElemType key) {
         tmpPtr = GetElemPtr(pos - 1);
         newNode = new Node<ElemType>(key, tmpPtr->next);
         tmpPtr->next = newNode;
+        curPtr = newNode;
+        curPos = pos;
+        count++;
     }
 }
 
@@ -290,37 +317,46 @@ void SimpleLinkList<ElemType>::Delete(int pos) {
         cout << "位置错误" << endl;
         return;
     } else {
-        Node<ElemType> *tmpPtr = GetElemPtr(pos - 1);
-        Node<ElemType> *nextPtr = tmpPtr->next;
-        tmpPtr->next = nextPtr->next;
-        delete nextPtr;
+        Node<ElemType> *prevPtr = GetElemPtr(pos - 1);
+        Node<ElemType> *tmpPtr = prevPtr->next;
+        prevPtr->next = tmpPtr->next;
+        delete tmpPtr;
+        count--;
     }
 }
 
 template<class ElemType>
 void SimpleLinkList<ElemType>::reverse() {
-    Node<ElemType> *tmpPtr = nullptr, *nextPtr = nullptr, *curPtr;
-    curPtr = head->next;
-    while (curPtr != nullptr) {
-        tmpPtr = curPtr->next;
-        curPtr->next = nextPtr;
-        nextPtr = curPtr;
-        curPtr = tmpPtr;
+    Node<ElemType> *tmpPtr = nullptr, *nextPtr = nullptr, *cur;
+    cur = head->next;
+    while (cur != nullptr) {
+        tmpPtr = cur->next;
+        cur->next = nextPtr;
+        nextPtr = cur;
+        cur = tmpPtr;
     }
     head->next = nextPtr;
+    curPtr = head;
+    curPos = 0;
 }
 
 template<class ElemType>
 SimpleLinkList<ElemType>::SimpleLinkList(const SimpleLinkList<ElemType> &copy) {
-    head = new Node<ElemType>(0, nullptr);
+    head = new Node<ElemType>();
+    curPtr = head;
+    curPos = 0;
+    count = 0;
     Node<ElemType> *tmpPtr = copy.head->next;
     for (; tmpPtr != nullptr; tmpPtr = tmpPtr->next) {
         Insert(Length() + 1, tmpPtr->data);
     }
+    curPtr = head;
+    curPos = 0;
 }
 
 template<class ElemType>
 SimpleLinkList<ElemType>::~SimpleLinkList() {
+    Clear();
     delete head;
 }
 
@@ -328,11 +364,16 @@ template<class ElemType>
 SimpleLinkList<ElemType> &SimpleLinkList<ElemType>::operator=(const SimpleLinkList<ElemType> &copy) {
     if (&copy != this) {
         Clear();
-        head = new Node<ElemType>(0, nullptr);
+        head = new Node<ElemType>();
+        curPtr = head;
+        curPos = 0;
+        count = 0;
         Node<ElemType> *tmpPtr = copy.head->next;
         for (; tmpPtr != nullptr; tmpPtr = tmpPtr->next) {
             Insert(Length() + 1, tmpPtr->data);
         }
+        curPtr = head;
+        curPos = 0;
     }
     return *this;
 }
@@ -343,6 +384,9 @@ template<class ElemType>
 class CircleLinkList {
 protected:
     Node<ElemType> *head;
+    mutable Node<ElemType> *curPtr;
+    mutable int curPos;
+    int count = 0;
 
     //辅助函数
     Node<ElemType> *GetElemPtr(int pos) const;//返回第pos个结点的指针
@@ -358,11 +402,11 @@ public:
 
     void Clear();// clear all elements in the list
 
-    void Traverse(void(*Visit)(ElemType &));//traverse the linklist by applying Visit function to all elements
+    void Traverse(void(*Visit)(ElemType &)) const;//traverse the linklist by applying Visit function to all elements
 
-    ElemType GetElem(int pos) const;//get the element on pos
+    bool GetElem(int pos, ElemType &elem) const;//get the element on pos
 
-    void SetElem(int pos, ElemType key);//set the element on pos to key
+    bool SetElem(int pos, const ElemType &key);//set the element on pos to key
 
     void Delete(int pos);//delete the element on pos
 
@@ -376,44 +420,55 @@ public:
 template<class ElemType>
 Node<ElemType> *CircleLinkList<ElemType>::GetElemPtr(int pos) const {
     /*============================*/
-    if (pos == 0) {
-        return head;
-    }
-    Node<ElemType> *tmpPtr = head->next;
-    int curPos = 1;
-    /*============================*/
-    while (tmpPtr != head && curPos != pos) {
-        tmpPtr = tmpPtr->next;
-        curPos++;
-    }
-    if (tmpPtr != head && curPos == pos) {
-        //查找成功
-        return tmpPtr;
-    } else {
-        //查找失败
+    if (pos < 0 || pos > Length()) {
         return nullptr;
     }
+    if (curPos > pos) {
+        curPtr = head;
+        curPos = 0;
+    }
+//    if (pos == 0) {
+//        return head;
+//    }
+//    Node<ElemType> *tmpPtr = head->next;
+//    int curPos = 1;
+//    /*============================*/
+//    while (tmpPtr != head && curPos != pos) {
+//        tmpPtr = tmpPtr->next;
+//        curPos++;
+//    }
+//    if (tmpPtr != head && curPos == pos) {
+//        //查找成功
+//        return tmpPtr;
+//    } else {
+//        //查找失败
+//        return nullptr;
+//    }
 }
 
 template<class ElemType>
 CircleLinkList<ElemType>::CircleLinkList() {
-    head = new Node<ElemType>;
+    head = new Node<ElemType>();
     /*============================*/
     head->next = head;
     /*============================*/
+    curPtr = head;
+    curPos = 0;
+    count = 0;
 }
 
 template<class ElemType>
 int CircleLinkList<ElemType>::Length() const {
-    int count = 0;
-    Node<ElemType> *tmpPtr = head->next;
-    /*============================*/
-    while (tmpPtr != head) {
-        /*============================*/
-        tmpPtr = tmpPtr->next;
-        count++;
-    }
     return count;
+//    int count = 0;
+//    Node<ElemType> *tmpPtr = head->next;
+//    /*============================*/
+//    while (tmpPtr != head) {
+//        /*============================*/
+//        tmpPtr = tmpPtr->next;
+//        count++;
+//    }
+//    return count;
 }
 
 template<class ElemType>
@@ -431,7 +486,7 @@ void CircleLinkList<ElemType>::Clear() {
 }
 
 template<class ElemType>
-void CircleLinkList<ElemType>::Traverse(void(*Visit)(ElemType &)) {
+void CircleLinkList<ElemType>::Traverse(void(*Visit)(ElemType &)) const {
     for (int i = 1; i <= Length(); i++) {
         Node<ElemType> *tmpPtr = GetElemPtr(i);
         Visit(tmpPtr->data);
@@ -439,24 +494,26 @@ void CircleLinkList<ElemType>::Traverse(void(*Visit)(ElemType &)) {
 }
 
 template<class ElemType>
-ElemType CircleLinkList<ElemType>::GetElem(int pos) const {
+bool CircleLinkList<ElemType>::GetElem(int pos, ElemType &elem) const {
     if (pos < 1 || pos > Length()) {
         cout << "位置错误" << endl;
-        return 0;
+        return false;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos);
-        return tmpPtr->data;
+        elem = tmpPtr->data;
+        return true;
     }
 }
 
 template<class ElemType>
-void CircleLinkList<ElemType>::SetElem(int pos, ElemType key) {
+bool CircleLinkList<ElemType>::SetElem(int pos, const ElemType &key) {
     if (pos < 1 || pos > Length()) {
         cout << "位置错误" << endl;
-        return;
+        return false;
     } else {
         Node<ElemType> *tmpPtr = GetElemPtr(pos);
         tmpPtr->data = key;
+        return true;
     }
 }
 
@@ -471,6 +528,9 @@ void CircleLinkList<ElemType>::Insert(int pos, ElemType key) {
         tmpPtr = GetElemPtr(pos - 1);
         newNode = new Node<ElemType>(key, tmpPtr->next);
         tmpPtr->next = newNode;
+        curPtr = newNode;
+        curPos = pos;
+        count++;
     }
 }
 
@@ -480,21 +540,31 @@ void CircleLinkList<ElemType>::Delete(int pos) {
         cout << "位置错误" << endl;
         return;
     } else {
-        Node<ElemType> *tmpPtr = GetElemPtr(pos - 1);
-        Node<ElemType> *nextPtr = tmpPtr->next;//node to be deleted
-        tmpPtr->next = nextPtr->next;
-        delete nextPtr;
+        Node<ElemType> *prevPtr = GetElemPtr(pos - 1), *tmpPtr;
+        tmpPtr = prevPtr->next;
+        prevPtr->next = tmpPtr->next;
+        delete tmpPtr;
+        count--;
+//        Node<ElemType> *tmpPtr = GetElemPtr(pos - 1);
+//        Node<ElemType> *nextPtr = tmpPtr->next;//node to be deleted
+//        tmpPtr->next = nextPtr->next;
+//        delete nextPtr;
     }
 }
 
 template<class ElemType>
 CircleLinkList<ElemType>::CircleLinkList(const CircleLinkList<ElemType> &copy) {
-    head = new Node<ElemType>;
+    head = new Node<ElemType>();
     head->next = head;
+    curPtr = head;
+    curPos = 0;
+    count = 0;
     Node<ElemType> *tmpPtr = copy.head->next;
     for (; tmpPtr != copy.head; tmpPtr = tmpPtr->next) {
         Insert(Length() + 1, tmpPtr->data);
     }
+    curPtr = head;
+    curPos = 0;
 }
 
 template<class ElemType>
@@ -509,10 +579,15 @@ CircleLinkList<ElemType> &CircleLinkList<ElemType>::operator=(const CircleLinkLi
         Clear();
         head = new Node<ElemType>;
         head->next = head;
+        curPtr = head;
+        curPos = 0;
+        count = 0;
         Node<ElemType> *tmpPtr = copy.head->next;
         for (; tmpPtr != copy.head; tmpPtr = tmpPtr->next) {
             Insert(Length() + 1, tmpPtr->data);
         }
+        curPtr = head;
+        curPos = 0;
     }
     return *this;
 }
@@ -523,15 +598,15 @@ template<class ElemType>
 class BiLinkList {
 protected:
     DblNode<ElemType> *head;
-    /* 新添加的数据成员记录当前位置/指针以及链表中的元素个数 */
+    /* 新添加的数据成员: 记录当前位置/指针以及链表中的元素个数 */
     mutable int curPos;
     mutable DblNode<ElemType> *curPtr;
     int count;
 
 
+public:
     DblNode<ElemType> *GetElemPtr(int pos) const;
 
-public:
     BiLinkList();
 
     BiLinkList(const BiLinkList<ElemType> &copy);//拷贝构造函数
@@ -546,9 +621,9 @@ public:
 
     void Traverse(void(*Visit)(ElemType &)) const;//遍历
 
-    ElemType GetElem(int pos) const;//get the element on pos
+    bool GetElem(int pos, ElemType &elem) const;//get the element on pos
 
-    void SetElem(int pos, ElemType key);//set the element on pos to key
+    bool SetElem(int pos, const ElemType &key);//set the element on pos to key
 
     void Insert(int pos, ElemType key);//insert an element with value key before pos
 
@@ -559,6 +634,9 @@ public:
 
 template<class ElemType>
 DblNode<ElemType> *BiLinkList<ElemType>::GetElemPtr(int pos) const {
+    if (pos < 0 || pos > Length()) {
+        return nullptr;
+    }
     while (curPos < pos) {
         curPtr = curPtr->next;
         curPos++;
@@ -567,12 +645,6 @@ DblNode<ElemType> *BiLinkList<ElemType>::GetElemPtr(int pos) const {
         curPtr = curPtr->prev;
         curPos--;
     }
-//    if (curPtr != head && curPos == pos) {
-//        return curPtr;
-//    } else if (curPtr == head) {
-//        curPos = 0;
-//        return head;
-//    }
     if (curPtr == head) {
         curPos = 0;
     }
@@ -590,26 +662,30 @@ BiLinkList<ElemType>::BiLinkList() {
 }
 
 template<class ElemType>
-ElemType BiLinkList<ElemType>::GetElem(int pos) const {
+bool BiLinkList<ElemType>::GetElem(int pos, ElemType &elem) const {
     if (pos < 1 || pos > Length()) {
         cout << "位置错误" << endl;
-        exit(1);
+        return false;
     } else {
         DblNode<ElemType> *tmpPtr;
         tmpPtr = GetElemPtr(pos);
-        return tmpPtr->data;
+        elem = tmpPtr->data;
+        curPos = pos;
+        curPtr = tmpPtr;
+        return true;
     }
 }
 
 template<class ElemType>
-void BiLinkList<ElemType>::SetElem(int pos, ElemType key) {
+bool BiLinkList<ElemType>::SetElem(int pos, const ElemType &key) {
     if (pos < 1 || pos > Length()) {
         cout << "位置错误" << endl;
-        return;
+        return false;
     } else {
         DblNode<ElemType> *tmpPtr;
         tmpPtr = GetElemPtr(pos);
         tmpPtr->data = key;
+        return true;
     }
 }
 
@@ -630,8 +706,8 @@ void BiLinkList<ElemType>::Insert(int pos, ElemType key) {
         return;
     } else {
         DblNode<ElemType> *newNode, *nextPtr, *prevPtr;
-        nextPtr = GetElemPtr(pos);
-        prevPtr = nextPtr->prev;
+        prevPtr = GetElemPtr(pos - 1);
+        nextPtr = prevPtr->next;
         newNode = new DblNode<ElemType>(key, prevPtr, nextPtr);
         nextPtr->prev = newNode;
         prevPtr->next = newNode;
@@ -648,18 +724,11 @@ void BiLinkList<ElemType>::Delete(int pos) {
         return;
     } else {
         DblNode<ElemType> *tmpPtr, *prevPtr, *nextPtr;
-        tmpPtr = GetElemPtr(pos);
-        prevPtr = tmpPtr->prev;
+        prevPtr = GetElemPtr(pos - 1);
+        tmpPtr = prevPtr->next;
         nextPtr = tmpPtr->next;
         prevPtr->next = nextPtr;
         nextPtr->prev = prevPtr;
-        if (pos == Length()) {
-            curPos = 0;
-            curPtr = head;
-        } else {
-            curPtr = nextPtr;
-            curPos = pos;
-        }
         count--;
         delete tmpPtr;
     }
