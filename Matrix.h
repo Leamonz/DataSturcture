@@ -61,8 +61,9 @@ Matrix<ElemType>::Matrix(const Matrix<ElemType> &copy) {
 template<class ElemType>
 Matrix<ElemType> &Matrix<ElemType>::operator=(const Matrix<ElemType> &copy) {
     if (&copy != this) {
-        if (elems != NULL) {
+        if (elems != nullptr) {
             delete[] elems;
+            elems = nullptr;
         }
         this->shape = copy.shape;
         int rows = shape.first, cols = shape.second;
@@ -79,9 +80,7 @@ Matrix<ElemType> &Matrix<ElemType>::operator=(const Matrix<ElemType> &copy) {
 
 template<class ElemType>
 Matrix<ElemType>::~Matrix() {
-    if (elems != NULL) {
-        delete[] elems;
-    }
+    delete[] elems;
 }
 
 template<class ElemType>
