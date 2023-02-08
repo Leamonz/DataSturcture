@@ -42,8 +42,6 @@ public:
 
     CharString &operator=(const CharString &copy);
 
-    CharString &operator=(const SimpleLinkList<char> &copy);
-
     int search(const CharString &sub, CharString &res);
 
     const char *CStr() const;
@@ -61,13 +59,22 @@ CharString::CharString() {
 CharString::CharString(const CharString &copy) {
     len = copy.len;
     str = new char[len + 1];
-    strcpy(str, copy.CStr());
+    strcpy(str, copy.str);
 }
 
 CharString::CharString(const char *copy) {
     len = strlen(copy);
     str = new char[len + 1];
     strcpy(str, copy);
+}
+
+CharString::CharString(const SimpleLinkList<char> &copy) {
+    len = copy.Length();
+    str = new char[len + 1];
+    for (int i = 1; i <= copy.Length(); i++) {
+        copy.GetElem(i, str[i - 1]);
+    }
+    str[len] = '\0';
 }
 
 int CharString::Length() const {
@@ -84,6 +91,10 @@ const char *CharString::CStr() const {
 
 CharString &CharString::operator=(const CharString &copy) {
     if (&copy != this) {
+        if (str != nullptr) {
+            delete[] str;
+            str = nullptr;
+        }
         len = copy.len;
         str = new char[len + 1];
         strcpy(str, copy.CStr());
@@ -153,15 +164,6 @@ void CharString::reversed() {
     }
 }
 
-CharString::CharString(const SimpleLinkList<char> &copy) {
-    str = new char[copy.Length() + 1];
-    len = copy.Length();
-    for (int i = 1; i <= copy.Length(); i++) {
-        str[i - 1] = copy.GetElem(i);
-    }
-    str[copy.Length()] = '\0';
-}
-
 //利用C风格字符串可以轻松实现运算符的重载
 bool operator==(const CharString &s1, const CharString &s2) {
     return strcmp(s1.CStr(), s2.CStr()) == 0;
@@ -194,10 +196,8 @@ void CStrCat(char *dest, const char *src) {
 
 void CStrcpy(char *dest, const char *src) {
     delete[] dest;
-    int i = 0;
     dest = new char[strlen(src) + 1];
-    while ((*(dest + i) = *(src + i), i++) != '\0') { ;
-    }
+    while ((*dest++ = *src++) != '\0');
 }
 
 // 字符串拼接
@@ -205,17 +205,16 @@ void Concat(CharString &addTo, const CharString &addOn) {
     const char *first = addTo.CStr();
     const char *second = addOn.CStr();
     char *copy = new char[strlen(first) + strlen(second) + 1];
-    strcpy(copy, first);
+    CStrcpy(copy, first);
     CStrCat(copy, second);
     addTo = CharString(copy);
     delete[] copy;
 }
 
-
 //求子串在字符串中的位置，从pos开始---利用库函数
 int Index(const CharString &target, const CharString &pattern, int pos = 0) {
     //先找到子串起始位置的指针
-    const char *ptr = strstr(target.CStr(), pattern.CStr());
+    const char *ptr = strstr(target.CStr() + pos, pattern.CStr());
     if (ptr == nullptr) {
         cout << "匹配失败" << endl;
         return -1;
@@ -226,16 +225,13 @@ int Index(const CharString &target, const CharString &pattern, int pos = 0) {
 
 //简单字符串模式匹配
 int SimpleIndex(const CharString &target, const CharString &pattern, int pos = 0) {
-    int i = pos, j = 0, max_len = target.Length() - pattern.Length();
-    while (i <= max_len) {
-        while (target[i] == pattern[j] && j < pattern.Length()) {
+    int i = pos, j = 0;
+    while (i < target.Length() && j < pattern.Length()) {
+        if (target[i] == pattern[j]) {
             i++;
             j++;
-        }
-        if (j == pattern.Length()) {
-            return i - j;
         } else {
-            i = i - j + 1;
+            i = ++pos;
             j = 0;
         }
     }
@@ -260,18 +256,22 @@ int FrontRearIndex(const CharString &target, const CharString &pattern, int pos 
     return -1;
 }
 
-CharString Read(istream &input) {
-    char temp[255];
+CharString Read(istream &input, char end = '\n') {
+//    char temp[255];
+    char *temp = new char[255];
     int len = 0;
     char c;
-    while (input.peek() != EOF && (c = input.get()) != '\n') {
+    while (input.peek() != EOF && (c = input.get()) != end) {
         temp[len++] = c;
     }
     temp[len] = '\0';
-    CharString res = CharString(temp);
+    CharString res(temp);
 //    delete[] temp;
     return res;
 }
 
+void Write(ostream &output, CharString str) {
+    output << str.CStr();
+}
 
 #endif //CLION_CharString_H
