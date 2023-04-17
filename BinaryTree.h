@@ -57,6 +57,8 @@ public:
     bool Empty() const;                                        // 判断二叉树是否为空
     bool GetElem(const BinTreeNode<ElemType> *cur, ElemType &e) const;    // 用e返回结点元素值
     bool SetElem(BinTreeNode<ElemType> *cur, const ElemType &e);    // 将结点cur的值置为e
+    BinTreeNode<ElemType> *GoFarLeft(BinTreeNode<ElemType> *cur, LinkStack<BinTreeNode<ElemType> *> &s) const;
+
     void InOrder(void (*visit)(const ElemType &)) const;    // 二叉树的中序遍历
     void NonRecurInOrder(void(*visit)(const ElemType &)) const; //非递归中序遍历
 
@@ -200,11 +202,11 @@ int BinaryTree<ElemType>::Height() const {
 //二叉树的销毁
 template<class ElemType>
 void BinaryTree<ElemType>::DestroyHelp(BinTreeNode<ElemType> *&r) {
-    if (r != NULL) {
+    if (r != nullptr) {
         DestroyHelp(r->lChild);
         DestroyHelp(r->rChild);
         delete r;
-        r = NULL;
+        r = nullptr;
     }
 }
 
@@ -216,13 +218,13 @@ BinaryTree<ElemType>::~BinaryTree() {
 //二叉树的复制
 template<class ElemType>
 BinTreeNode<ElemType> *BinaryTree<ElemType>::CopyTreeHelp(const BinTreeNode<ElemType> *r) {
-    if (r != NULL) {
+    if (r != nullptr) {
         BinTreeNode<ElemType> *lChild = CopyTreeHelp(r->lChild);//复制左子树
         BinTreeNode<ElemType> *rChild = CopyTreeHelp(r->rChild);//复制右子树
         auto *res = new BinTreeNode<ElemType>(r->data, lChild, rChild);//复制根节点
         return res;
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -351,8 +353,34 @@ void BinaryTree<ElemType>::DeleteRightChild(BinTreeNode<ElemType> *cur) {
 }
 
 template<class ElemType>
-void BinaryTree<ElemType>::NonRecurInOrder(void (*visit)(const ElemType &)) const {
+BinTreeNode<ElemType> *
+BinaryTree<ElemType>::GoFarLeft(BinTreeNode<ElemType> *cur, LinkStack<BinTreeNode<ElemType> *> &s) const {
+    if (cur == nullptr) {
+        return nullptr;
+    } else {
+        while (cur->lChild != nullptr) {
+            s.Push(cur);
+            cur = cur->lChild;
+        }
+        return cur;
+    }
+}
 
+template<class ElemType>
+void BinaryTree<ElemType>::NonRecurInOrder(void (*visit)(const ElemType &)) const {
+    BinTreeNode<ElemType> *cur;
+    LinkStack<BinTreeNode<ElemType> *> s;
+    cur = GoFarLeft(root, s);
+    while (cur != nullptr) {
+        visit(cur->data);
+        if (cur->rChild != nullptr) {
+            cur = GoFarLeft(cur->rChild, s);
+        } else if (!s.Empty()) {
+            s.Pop(cur);
+        } else {
+            cur = nullptr;
+        }
+    }
 }
 
 template<class ElemType>
@@ -369,7 +397,25 @@ void BinaryTree<ElemType>::NonRecurPreOrder(void (*visit)(const ElemType &)) con
             tmp = tmp->lChild;
         }
         if (s.Empty()) break;
-        tmp = s.Pop();
+        s.Pop(tmp);
+    }
+}
+
+template<class ElemType>
+void BinaryTree<ElemType>::NonRecurPostOrder(void (*visit)(const ElemType &)) const {
+    BinTreeNode<ElemType> *cur;
+    LinkStack<BinTreeNode<ElemType> *> s;
+    cur = GoFarLeft(root, s);
+    while (cur != nullptr) {
+        visit(cur->data);
+        if (cur->rChild == nullptr) {
+            s.Pop(cur);
+        } else if (!s.Empty()) {
+            s.Push(cur);
+            cur = GoFarLeft(cur->rChild, s);
+        } else {
+            cur = nullptr;
+        }
     }
 }
 

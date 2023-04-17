@@ -215,7 +215,8 @@ void Editor::RunCommand(char ch) {
 }
 
 void Editor::ShowLine(int num) {
-    CharString curLine = StringBuffer.GetElem(num);
+    CharString curLine;
+    StringBuffer.GetElem(num, curLine);
     cout << num << ": " << curLine << endl;
 }
 
@@ -281,7 +282,7 @@ void Editor::View() {
 void Editor::WriteFile() {
     CharString Line;
     for (int i = 1; i <= StringBuffer.Length(); i++) {
-        Line = StringBuffer.GetElem(i);
+        StringBuffer.GetElem(i, Line);
         outFile << Line << endl;
     }
     cout << "已将缓存区内容输出到指定文件中！" << endl;
@@ -305,7 +306,7 @@ void Editor::FindCharString(const CharString &tarLine) {
     CharString Line, res;
     int count = 0;
     for (int i = 1; i <= StringBuffer.Length(); i++) {
-        Line = StringBuffer.GetElem(i);
+        StringBuffer.GetElem(i, Line);
         int t = Line.search(tarLine, res);
         if (t) {
             cout << i << ": " << res << endl;

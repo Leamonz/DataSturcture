@@ -146,4 +146,140 @@ Matrix<ElemType> operator*(const Matrix<ElemType> &mat1, const Matrix<ElemType> 
     return ans;
 }
 
+template<class ElemType>
+class Triple {
+protected:
+    int rows, cols;
+    ElemType elem{};
+public:
+    Triple();
+
+    Triple(int r, int c, ElemType e);
+
+    Triple(const Triple<ElemType> &copy);
+};
+
+template<class ElemType>
+Triple<ElemType>::Triple() {
+    rows = 0;
+    cols = 0;
+}
+
+template<class ElemType>
+Triple<ElemType>::Triple(int r, int c, ElemType e) {
+    rows = r;
+    cols = c;
+    elem = e;
+}
+
+template<class ElemType>
+Triple<ElemType>::Triple(const Triple<ElemType> &copy) {
+    if (&copy != this) {
+        rows = copy.rows;
+        cols = copy.cols;
+        elem = copy.elem;
+    }
+}
+
+template<class ElemType>
+class SparseMatrix {
+protected:
+    pair<int, int> shape;
+    SimpleLinkList<Triple<ElemType>> *elems;
+public:
+    explicit SparseMatrix(const SimpleLinkList<Triple<ElemType>> &copy, int r = 100, int c = 100);
+
+    int GetRows() const;
+
+    int GetCols() const;
+
+    int GetNum() const;
+
+    bool Empty() const;
+
+    bool SetElem(int x, int y, ElemType &elem);
+
+    bool GetElem(int x, int y, ElemType &elem) const;
+
+    ElemType &operator()(int x, int y) const;
+
+    ~SparseMatrix();
+};
+
+template<class ElemType>
+SparseMatrix<ElemType>::SparseMatrix(const SimpleLinkList<Triple<ElemType>> &copy, int r, int c) {
+    shape = make_pair(r, c);
+    elems = new SimpleLinkList<Triple<ElemType>>(r * c);
+    Triple<ElemType> temp;
+    for (int i = 1; i <= copy.Length(); i++) {
+        copy.GetElem(i, temp);
+        elems->Insert(i, temp);
+    }
+}
+
+template<class ElemType>
+int SparseMatrix<ElemType>::GetRows() const {
+    return shape.first;
+}
+
+template<class ElemType>
+int SparseMatrix<ElemType>::GetCols() const {
+    return shape.second;
+}
+
+template<class ElemType>
+int SparseMatrix<ElemType>::GetNum() const {
+    return elems->Length();
+}
+
+template<class ElemType>
+bool SparseMatrix<ElemType>::Empty() const {
+    return elems->Empty();
+}
+
+template<class ElemType>
+bool SparseMatrix<ElemType>::SetElem(int x, int y, ElemType &elem) {
+    Triple<ElemType> temp;
+    for (int i = 1; i <= elems->Length(); i++) {
+        elems->GetElem(i, temp);
+        if (temp.rows == x && temp.cols == y) {
+            elems->SetElem(i, Triple<ElemType>(x, y, elem));
+            return true;
+        }
+    }
+    return false;
+}
+
+template<class ElemType>
+bool SparseMatrix<ElemType>::GetElem(int x, int y, ElemType &elem) const {
+    Triple<ElemType> temp;
+    for (int i = 1; i <= elems->Length(); i++) {
+        elems->GetElem(i, temp);
+        if (temp.rows == x && temp.cols == y) {
+            elem = temp.elem;
+            return true;
+        }
+    }
+    return false;
+}
+
+template<class ElemType>
+ElemType &SparseMatrix<ElemType>::operator()(int x, int y) const {
+    Triple<ElemType> temp;
+    for (int i = 1; i <= elems->Length(); i++) {
+        elems->GetElem(temp);
+        if (temp.rows == x && temp.cols == y) {
+            return temp.elem;
+        }
+    }
+    cout << "Can't find elem on position: (" << x << "," << y << ")" << endl;
+    exit(1);
+}
+
+template<class ElemType>
+SparseMatrix<ElemType>::~SparseMatrix() {
+    delete elems;
+}
+
+
 #endif //UTILS_HPP_MATRIX_H

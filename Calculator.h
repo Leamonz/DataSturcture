@@ -121,7 +121,7 @@ void Calculator::Run() {
     double operand, left, right, res;
     char theta;
     cin >> ch;
-    while ((optrTop = optr.GetHead(), optrTop != '=') || ch != '=') {
+    while ((optr.Top(optrTop), optrTop != '=') || ch != '=') {
         if (IsOperator(ch)) {
             char com = Precede(optrTop, ch);
             switch (com) {

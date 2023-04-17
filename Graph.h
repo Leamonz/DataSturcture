@@ -110,7 +110,7 @@ int AdjListDirGraph<ElemType>::IndexHelp(const SimpleLinkList<int> *la, int v) c
     int curPos;
     int Vex;
     for (curPos = 1; curPos <= la->Length(); curPos++) {
-        Vex = la->GetElem(curPos);
+        la->GetElem(curPos, Vex);
         if (Vex == v) break;
     }
     return curPos; // curPos = la->Length()+1 说明没有找到
@@ -615,7 +615,6 @@ void DFS(const AdjListDirGraph<ElemType> &graph, int v, void (*visit)(ElemType &
     graph.GetElem(curVex, elem);
     visit(curVex);
     graph.SetTag(curVex, Traversed);
-
     for (curVex = graph.FirstAdjVex(curVex); curVex >= 0; curVex = graph.NextAdjVex(v, curVex)) {
         if (graph.GetTag(curVex) == UnTraversed) {
             DFS(graph, curVex, visit);
@@ -637,18 +636,20 @@ void DFSTraverse(const AdjListDirGraph<ElemType> &graph, void (*visit)(ElemType 
 
 template<class ElemType>
 void BFS(const AdjListDirGraph<ElemType> &graph, int v, void(*visit)(ElemType &)) {
-    LinkQueue<int> q;
+    LinkQueue<ElemType> q;
     q.PushBack(v);
+    int w, curVex;
     ElemType elem;
-    int vex;
     while (!q.Empty()) {
-        vex = q.PopFront();
-        if (graph.GetTag(vex) == UnTraversed) {
-            graph.SetTag(vex, Traversed);
+        q.PopFront(curVex);
+        if (graph.GetTag(curVex) == UnTraversed) {
             graph.GetElem(v, elem);
             visit(elem);
-            for (int w = graph.FirstAdjVex(vex); w >= 0; w = graph.NextAdjVex(vex, w)) {
-                q.PushBack(w);
+            graph.SetTag(curVex, Traversed);
+            for (w = graph.FirstAdjVex(curVex); w >= 0; w = graph.NextAdjVex(curVex, w)) {
+                graph.GetElem(w, elem);
+                visit(elem);
+                graph.SetTag(w, Traversed);
             }
         }
     }

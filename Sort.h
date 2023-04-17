@@ -56,25 +56,20 @@ void QuickSort(ElemType *arr, int l, int r) {
         return;
     }
     int L = l, R = r;
-    int pivot = (l + r) / 2;
-    while (l < pivot && r > pivot) {
-        if (arr[l] > arr[pivot]) {
-            int temp = arr[pivot];
-            arr[pivot] = arr[l];
-            arr[l] = temp;
-        } else {
-            l++;
-        }
-        if (arr[r] < arr[pivot]) {
-            int temp = arr[pivot];
-            arr[pivot] = arr[r];
-            arr[r] = temp;
-        } else {
-            r--;
+    ElemType pivot = arr[l];
+    while (L != R) {
+        while (L != R && arr[R] >= pivot) R--;
+        while (L != R && arr[L] <= pivot) L++;
+        if (L < R) {
+            int temp = arr[L];
+            arr[L] = arr[R];
+            arr[R] = temp;
         }
     }
-    QuickSort(arr, L, pivot);
-    QuickSort(arr, pivot + 1, R);
+    arr[l] = arr[R];
+    arr[R] = pivot;
+    QuickSort(arr, l, R - 1);
+    QuickSort(arr, R + 1, r);
 }
 
 template<class ElemType>
